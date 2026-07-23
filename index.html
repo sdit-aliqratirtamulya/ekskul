@@ -8,43 +8,27 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
-:root{
-  --primary:#047857;--primary-light:#059669;--primary-dark:#065F46;--primary-900:#064E3B;
-  --accent:#D97706;--accent-light:#F59E0B;
-  --bg:#F0FDF4;--bg-card:#fff;--text:#1F2937;--text-muted:#6B7280;--border:#D1D5DB;
-  --success:#10B981;--danger:#EF4444;--warning:#F59E0B;--info:#3B82F6;
-  --sidebar-w:260px;--radius:10px;
-  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
-  --shadow-lg:0 10px 25px rgba(0,0,0,.1);
-}
+:root{--primary:#047857;--primary-light:#059669;--primary-dark:#065F46;--primary-900:#064E3B;--accent:#D97706;--accent-light:#F59E0B;--bg:#F0FDF4;--bg-card:#fff;--text:#1F2937;--text-muted:#6B7280;--border:#D1D5DB;--success:#10B981;--danger:#EF4444;--warning:#F59E0B;--info:#3B82F6;--sidebar-w:260px;--radius:10px;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);--shadow-lg:0 10px 25px rgba(0,0,0,.1)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-a{text-decoration:none;color:inherit}
-button{cursor:pointer;font-family:inherit;border:none;outline:none}
-input,select,textarea{font-family:inherit;outline:none}
-table{border-collapse:collapse;width:100%}
-
+a{text-decoration:none;color:inherit}button{cursor:pointer;font-family:inherit;border:none;outline:none}
+input,select,textarea{font-family:inherit;outline:none}table{border-collapse:collapse;width:100%}
 #loading{position:fixed;inset:0;background:rgba(6,78,59,.35);backdrop-filter:blur(4px);z-index:9999;display:none;align-items:center;justify-content:center}
-#loading.active{display:flex}
-.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+#loading.active{display:flex}.spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 #toastContainer{position:fixed;top:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:8px}
 .toast{padding:14px 20px;border-radius:var(--radius);color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;transform:translateX(120%);transition:transform .3s;box-shadow:var(--shadow-lg);max-width:380px}
-.toast.show{transform:translateX(0)}
-.toast-success{background:var(--primary)}.toast-error{background:var(--danger)}.toast-info{background:var(--info)}
-
+.toast.show{transform:translateX(0)}.toast-success{background:var(--primary)}.toast-error{background:var(--danger)}.toast-info{background:var(--info)}
 #loginPage{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#064E3B 0%,#047857 40%,#059669 100%);position:relative;overflow:hidden}
 #loginPage::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(217,119,6,.15) 0%,transparent 70%);top:-100px;right:-100px;border-radius:50%}
 #loginPage::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,.05) 0%,transparent 70%);bottom:-80px;left:-80px;border-radius:50%}
 .login-card{background:rgba(255,255,255,.97);border-radius:20px;padding:48px 40px;width:420px;max-width:92vw;box-shadow:0 25px 60px rgba(0,0,0,.3);position:relative;z-index:1}
 .login-card h1{font-size:22px;font-weight:800;color:var(--primary-dark);text-align:center;margin-bottom:4px}
 .login-card .subtitle{text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:32px}
-.login-card .logo-icon{text-align:center;margin-bottom:20px}
-.login-card .logo-icon i{font-size:48px;color:var(--primary)}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.login-card .logo-icon{text-align:center;margin-bottom:20px}.login-card .logo-icon i{font-size:48px;color:var(--primary)}
+.form-group{margin-bottom:18px}.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;transition:border-color .2s,box-shadow .2s;background:#FAFAFA}
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(4,120,87,.1);background:#fff}
 .btn{padding:11px 24px;border-radius:8px;font-size:14px;font-weight:600;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
@@ -52,48 +36,42 @@ table{border-collapse:collapse;width:100%}
 .btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{background:#B45309}
 .btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#DC2626}
 .btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--primary)}.btn-outline:hover{background:var(--primary);color:#fff}
-.btn-sm{padding:7px 14px;font-size:12px}
-.btn-full{width:100%;justify-content:center}
+.btn-info{background:var(--info);color:#fff}.btn-info:hover{background:#2563EB}
+.btn-sm{padding:7px 14px;font-size:12px}.btn-full{width:100%;justify-content:center}
 .login-toggle{text-align:center;margin-top:18px;font-size:13px;color:var(--text-muted)}
 .login-toggle a{color:var(--primary);font-weight:600;cursor:pointer}.login-toggle a:hover{text-decoration:underline}
 .divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--text-muted);font-size:12px}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
-
+.pin-input{letter-spacing:12px;text-align:center;font-size:24px;font-weight:700;padding:12px 14px!important}
 #mainApp{display:none;min-height:100vh}
 .sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:linear-gradient(180deg,#064E3B 0%,#065F46 100%);color:#fff;z-index:100;display:flex;flex-direction:column;transition:transform .3s}
 .sidebar-header{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sidebar-header h2{font-size:16px;font-weight:800}.sidebar-header p{font-size:11px;opacity:.6;margin-top:2px}
 .sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
 .nav-item{display:flex;align-items:center;gap:12px;padding:12px 20px;font-size:13.5px;font-weight:500;color:rgba(255,255,255,.65);transition:all .2s;cursor:pointer;border-left:3px solid transparent}
-.nav-item:hover{color:#fff;background:rgba(255,255,255,.08)}
-.nav-item.active{color:#fff;background:rgba(255,255,255,.12);border-left-color:var(--accent-light)}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.08)}.nav-item.active{color:#fff;background:rgba(255,255,255,.12);border-left-color:var(--accent-light)}
 .nav-item i{width:20px;text-align:center;font-size:15px}
 .sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.1)}
-.sidebar-footer .user-info{font-size:12px;opacity:.8;margin-bottom:10px}
-.sidebar-footer .user-info strong{display:block;font-size:13px;opacity:1}
+.sidebar-footer .user-info{font-size:12px;opacity:.8;margin-bottom:10px}.sidebar-footer .user-info strong{display:block;font-size:13px;opacity:1}
 .main-content{margin-left:var(--sidebar-w);min-height:100vh}
-.topbar{background:var(--bg-card);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E5E7EB;position:sticky;top:0;z-index:50}
+.topbar{background:var(--bg-card);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E5E7EB;position:sticky;top:0;z-index:50;gap:12px;flex-wrap:wrap}
 .topbar h1{font-size:20px;font-weight:700;color:var(--primary-dark)}
 .topbar .menu-toggle{display:none;background:none;font-size:22px;color:var(--primary-dark)}
-.page-content{padding:24px 28px}
-.page{display:none}.page.active{display:block}
-
+.topbar-right{display:flex;align-items:center;gap:12px}
+#otEkskulSwitch{padding:8px 12px;border:1.5px solid var(--primary);border-radius:8px;font-size:13px;font-weight:600;color:var(--primary);background:var(--bg);min-width:180px}
+.page-content{padding:24px 28px}.page{display:none}.page.active{display:block}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
 .stat-card{background:var(--bg-card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;transition:transform .2s,box-shadow .2s;border:1px solid #E5E7EB}
 .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .stat-icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0}
-.stat-icon.green{background:linear-gradient(135deg,#059669,#047857)}
-.stat-icon.amber{background:linear-gradient(135deg,#D97706,#B45309)}
-.stat-icon.blue{background:linear-gradient(135deg,#3B82F6,#2563EB)}
-.stat-icon.red{background:linear-gradient(135deg,#EF4444,#DC2626)}
+.stat-icon.green{background:linear-gradient(135deg,#059669,#047857)}.stat-icon.amber{background:linear-gradient(135deg,#D97706,#B45309)}
+.stat-icon.blue{background:linear-gradient(135deg,#3B82F6,#2563EB)}.stat-icon.red{background:linear-gradient(135deg,#EF4444,#DC2626)}
 .stat-icon.teal{background:linear-gradient(135deg,#14B8A6,#0D9488)}
 .stat-info h3{font-size:24px;font-weight:800;line-height:1}.stat-info p{font-size:12px;color:var(--text-muted);margin-top:4px}
-
 .card{background:var(--bg-card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid #E5E7EB;margin-bottom:20px}
 .card-header{padding:16px 20px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .card-header h3{font-size:15px;font-weight:700;color:var(--primary-dark)}
 .card-body{padding:20px}.card-body.no-pad{padding:0}
-
 .table-wrap{overflow-x:auto}
 table th{background:#F9FAFB;padding:11px 14px;font-size:12px;font-weight:700;color:var(--text-muted);text-align:left;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;border-bottom:2px solid #E5E7EB}
 table td{padding:10px 14px;font-size:13px;border-bottom:1px solid #F3F4F6;vertical-align:middle}
@@ -103,40 +81,31 @@ table tr:hover td{background:#F0FDF4}
 .badge-yellow{background:#FEF3C7;color:#92400E}.badge-blue{background:#DBEAFE;color:#1E40AF}
 .badge-gray{background:#F3F4F6;color:#4B5563}
 .action-btns{display:flex;gap:6px}
-
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.active{display:flex}
-.modal{background:var(--bg-card);border-radius:16px;width:520px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,.2);animation:modalIn .25s ease}
+.modal{background:var(--bg-card);border-radius:16px;width:540px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,.2);animation:modalIn .25s ease}
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-header{padding:20px 24px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:space-between}
 .modal-header h3{font-size:17px;font-weight:700;color:var(--primary-dark)}
 .modal-close{background:none;font-size:20px;color:var(--text-muted);padding:4px}.modal-close:hover{color:var(--danger)}
-.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;gap:10px}
+.modal-body{padding:24px}.modal-footer{padding:16px 24px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-
-.tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:20px}
+.tabs{display:flex;gap:0;border-bottom:2px solid #E5E7EB;margin-bottom:20px;flex-wrap:wrap}
 .tab-btn{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-muted);background:none;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
 .tab-btn:hover{color:var(--primary)}.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
 .tab-content{display:none}.tab-content.active{display:block}
-
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
 .chart-container{position:relative;height:280px}
-
 #qrReader{width:100%;max-width:400px;margin:0 auto}
-.qr-result{text-align:center;padding:20px}
-.qr-result i{font-size:48px;margin-bottom:12px}.qr-result h4{font-size:16px;margin-bottom:4px}.qr-result p{color:var(--text-muted);font-size:13px}
-
+.qr-result{text-align:center;padding:20px}.qr-result i{font-size:48px;margin-bottom:12px}
 .filter-bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:20px}
 .filter-bar .form-group{margin-bottom:0;min-width:160px}
-
 .empty-state{text-align:center;padding:48px 20px;color:var(--text-muted)}
 .empty-state i{font-size:48px;margin-bottom:12px;opacity:.4}.empty-state p{font-size:14px}
-
 .ot-profile{display:flex;align-items:center;gap:20px;padding:24px;background:linear-gradient(135deg,#064E3B,#047857);border-radius:var(--radius);color:#fff;margin-bottom:24px}
 .ot-avatar{width:64px;height:64px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;flex-shrink:0}
 .ot-profile h3{font-size:20px;font-weight:700}.ot-profile p{font-size:13px;opacity:.8;margin-top:2px}
-
 .absensi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
 .absensi-item{border:1.5px solid #E5E7EB;border-radius:var(--radius);padding:14px;transition:border-color .2s}
 .absensi-item.hadir{border-color:var(--success);background:#F0FDF4}
@@ -144,7 +113,8 @@ table tr:hover td{background:#F0FDF4}
 .absensi-item.izin{border-color:var(--info);background:#EFF6FF}
 .absensi-item.alpa{border-color:var(--danger);background:#FEF2F2}
 .absensi-item h4{font-size:14px;font-weight:600;margin-bottom:2px}.absensi-item p{font-size:12px;color:var(--text-muted)}
-
+.iuran-preview-row.dup td{background:#FEF2F2;opacity:.6;text-decoration:line-through}
+.toolbar-btns{display:flex;gap:8px;flex-wrap:wrap}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
   .main-content{margin-left:0}.topbar .menu-toggle{display:block}
@@ -156,6 +126,14 @@ table tr:hover td{background:#F0FDF4}
 @media(max-width:480px){.stats-grid{grid-template-columns:1fr}.login-card{padding:32px 24px}}
 .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
 .sidebar-overlay.active{display:block}
+@media print{
+  .sidebar,.sidebar-overlay,.topbar .menu-toggle,.btn,.filter-bar,.tabs,.modal-overlay,
+  #toastContainer,#loading,.toolbar-btns,#otEkskulSwitch,.no-print{display:none!important}
+  .main-content{margin-left:0!important}.topbar{position:static!important;border:none!important;padding:8px 16px!important}
+  .page-content{padding:8px!important}.card{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid;margin-bottom:12px!important}
+  table{font-size:10px!important}table th{background:#f0f0f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .stats-grid{grid-template-columns:1fr 1fr 1fr!important}
+}
 </style>
 </head>
 <body>
@@ -163,7 +141,7 @@ table tr:hover td{background:#F0FDF4}
 <div id="loading"><div class="spinner"></div></div>
 <div id="toastContainer"></div>
 
-<!-- ==================== LOGIN ==================== -->
+<!-- ===== LOGIN ===== -->
 <div id="loginPage">
   <div class="login-card">
     <div class="logo-icon"><i class="fas fa-mosque"></i></div>
@@ -174,10 +152,11 @@ table tr:hover td{background:#F0FDF4}
       <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Masukkan password"></div>
       <button class="btn btn-primary btn-full" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Masuk</button>
       <div class="divider">atau</div>
-      <div class="login-toggle">Login sebagai <a onclick="toggleLogin()">Orang Tua (NIS)</a></div>
+      <div class="login-toggle">Login sebagai <a onclick="toggleLogin()">Orang Tua</a></div>
     </div>
     <div id="loginOT" style="display:none">
       <div class="form-group"><label>NIS Siswa</label><input type="text" id="loginNIS" placeholder="Contoh: 262701001" autocomplete="off"></div>
+      <div class="form-group"><label>PIN (4 digit)</label><input type="password" id="loginPIN" class="pin-input" maxlength="4" placeholder="****" inputmode="numeric"></div>
       <button class="btn btn-primary btn-full" onclick="doLoginOT()"><i class="fas fa-sign-in-alt"></i> Masuk</button>
       <div class="divider">atau</div>
       <div class="login-toggle">Login sebagai <a onclick="toggleLogin()">Admin / Pembina</a></div>
@@ -185,11 +164,11 @@ table tr:hover td{background:#F0FDF4}
   </div>
 </div>
 
-<!-- ==================== MAIN APP ==================== -->
+<!-- ===== MAIN APP ===== -->
 <div id="mainApp">
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header"><h2><i class="fas fa-mosque"></i> SDIT AL-IQRA</h2><p>Manajemen Ekskul</p></div>
+    <div class="sidebar-header"><h2><i class="fas fa-mosque"></i> SDIT AL-IQRA</h2><p>Manajemen Ekskul v2</p></div>
     <nav class="sidebar-nav" id="sidebarNav"></nav>
     <div class="sidebar-footer">
       <div class="user-info"><strong id="sidebarUserName">-</strong><span id="sidebarUserRole">-</span></div>
@@ -200,1054 +179,784 @@ table tr:hover td{background:#F0FDF4}
     <div class="topbar">
       <button class="menu-toggle" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
       <h1 id="pageTitle">Dashboard</h1>
-      <span style="font-size:13px;color:var(--text-muted)" id="topbarDate"></span>
+      <div class="topbar-right">
+        <select id="otEkskulSwitch" style="display:none" onchange="switchOTEkskul(this.value)"></select>
+        <span style="font-size:13px;color:var(--text-muted)" id="topbarDate"></span>
+      </div>
     </div>
     <div class="page-content">
 
       <div class="page active" id="pageDashboard"></div>
 
+      <!-- SISWA -->
+      <div class="page" id="pageSiswa">
+        <div class="card"><div class="card-header"><h3><i class="fas fa-user-graduate"></i> Data Siswa</h3><div class="toolbar-btns"><button class="btn btn-primary btn-sm" onclick="openModalSiswa()"><i class="fas fa-plus"></i> Tambah</button></div></div>
+        <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Orang Tua</th><th>HP Ortu</th><th>PIN</th><th>Aksi</th></tr></thead><tbody id="tbSiswa"></tbody></table></div></div></div>
+      </div>
+
+      <!-- JENIS EKSKUL -->
       <div class="page" id="pageJenisEkskul">
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-layer-group"></i> Daftar Jenis Ekskul</h3><button class="btn btn-primary btn-sm" onclick="openModalJE()"><i class="fas fa-plus"></i> Tambah</button></div>
-          <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Nama Ekskul</th><th>Deskripsi</th><th>Aksi</th></tr></thead><tbody id="tbJE"></tbody></table></div></div>
-        </div>
+        <div class="card"><div class="card-header"><h3><i class="fas fa-layer-group"></i> Jenis Ekskul</h3><button class="btn btn-primary btn-sm" onclick="openModalJE()"><i class="fas fa-plus"></i> Tambah</button></div>
+        <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Nama</th><th>Deskripsi</th><th>Aksi</th></tr></thead><tbody id="tbJE"></tbody></table></div></div></div>
       </div>
 
+      <!-- PELATIH -->
       <div class="page" id="pagePelatih">
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-chalkboard-teacher"></i> Data Pelatih / Pembina</h3><button class="btn btn-primary btn-sm" onclick="openModalPelatih()"><i class="fas fa-plus"></i> Tambah</button></div>
-          <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Nama</th><th>No. HP</th><th>Ekskul</th><th>Aksi</th></tr></thead><tbody id="tbPelatih"></tbody></table></div></div>
-        </div>
+        <div class="card"><div class="card-header"><h3><i class="fas fa-chalkboard-teacher"></i> Data Pelatih</h3><button class="btn btn-primary btn-sm" onclick="openModalPelatih()"><i class="fas fa-plus"></i> Tambah</button></div>
+        <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Nama</th><th>No. HP</th><th>Ekskul</th><th>Aksi</th></tr></thead><tbody id="tbPelatih"></tbody></table></div></div></div>
       </div>
 
+      <!-- PENDAFTARAN EKSKUL -->
       <div class="page" id="pageDataEkskul">
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-users"></i> Data Siswa Ekskul</h3><button class="btn btn-primary btn-sm" onclick="openModalDE()"><i class="fas fa-plus"></i> Tambah</button></div>
-          <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>NIS</th><th>Nama Siswa</th><th>Kelas</th><th>Ekskul</th><th>Aksi</th></tr></thead><tbody id="tbDE"></tbody></table></div></div>
-        </div>
+        <div class="card"><div class="card-header"><h3><i class="fas fa-clipboard-list"></i> Pendaftaran Ekskul</h3><button class="btn btn-primary btn-sm" onclick="openModalDE()"><i class="fas fa-plus"></i> Daftarkan</button></div>
+        <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Ekskul</th><th>Aksi</th></tr></thead><tbody id="tbDE"></tbody></table></div></div></div>
       </div>
 
+      <!-- JADWAL -->
       <div class="page" id="pageJadwal">
-        <div class="card">
-          <div class="card-header"><h3><i class="fas fa-calendar-alt"></i> Jadwal Ekskul</h3><button class="btn btn-primary btn-sm" onclick="openModalJadwal()"><i class="fas fa-plus"></i> Tambah</button></div>
-          <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Ekskul</th><th>Hari</th><th>Jam</th><th>Tempat</th><th>Pelatih</th><th>Aksi</th></tr></thead><tbody id="tbJadwal"></tbody></table></div></div>
-        </div>
+        <div class="card"><div class="card-header"><h3><i class="fas fa-calendar-alt"></i> Jadwal</h3><button class="btn btn-primary btn-sm" onclick="openModalJadwal()"><i class="fas fa-plus"></i> Tambah</button></div>
+        <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Ekskul</th><th>Hari</th><th>Jam</th><th>Tempat</th><th>Pelatih</th><th>Aksi</th></tr></thead><tbody id="tbJadwal"></tbody></table></div></div></div>
       </div>
 
+      <!-- ABSENSI -->
       <div class="page" id="pageAbsensi">
         <div id="absensiAdminView">
-          <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab(this,'tabAbsenManual')">Manual</button>
-            <button class="tab-btn" onclick="switchTab(this,'tabAbsenQR')">Scan QR</button>
-          </div>
+          <div class="tabs no-print"><button class="tab-btn active" onclick="switchTab(this,'tabAbsenManual')">Manual</button><button class="tab-btn" onclick="switchTab(this,'tabAbsenQR')">Scan QR</button></div>
           <div class="tab-content active" id="tabAbsenManual">
-            <div class="card">
-              <div class="card-header"><h3>Absensi Manual</h3></div>
-              <div class="card-body">
-                <div class="filter-bar">
-                  <div class="form-group"><label>Tanggal</label><input type="date" id="absenTanggal"></div>
-                  <div class="form-group"><label>Ekskul</label><select id="absenEkskul" onchange="onAbsenEkskulChange()"><option value="">-- Pilih --</option></select></div>
-                  <div class="form-group"><label>Kelas</label><select id="absenKelas" onchange="onAbsenKelasChange()"><option value="">Semua Kelas</option></select></div>
-                </div>
-                <div id="absenSiswaList"></div>
-                <div style="margin-top:16px;text-align:right"><button class="btn btn-primary" onclick="saveAbsensi()"><i class="fas fa-save"></i> Simpan Absensi</button></div>
+            <div class="card"><div class="card-header"><h3>Absensi Manual</h3></div><div class="card-body">
+              <div class="filter-bar">
+                <div class="form-group"><label>Tanggal</label><input type="date" id="absenTanggal"></div>
+                <div class="form-group"><label>Ekskul</label><select id="absenEkskul" onchange="onAbsenEkskulChange()"><option value="">-- Pilih --</option></select></div>
+                <div class="form-group"><label>Kelas</label><select id="absenKelas" onchange="onAbsenKelasChange()"><option value="">Semua</option></select></div>
               </div>
-            </div>
+              <div id="absenSiswaList"></div>
+              <div style="margin-top:16px;text-align:right"><button class="btn btn-primary" onclick="saveAbsensi()"><i class="fas fa-save"></i> Simpan Absensi</button></div>
+            </div></div>
           </div>
           <div class="tab-content" id="tabAbsenQR">
-            <div class="card">
-              <div class="card-header"><h3>Scan QR Code</h3></div>
-              <div class="card-body" style="text-align:center">
-                <div class="form-group" style="max-width:300px;margin:0 auto 16px"><label>Ekskul</label><select id="qrEkskul"><option value="">-- Pilih --</option></select></div>
-                <div id="qrReader" style="margin-bottom:16px"></div>
-                <div id="qrResult"></div>
-                <button class="btn btn-primary" onclick="startQR()"><i class="fas fa-qrcode"></i> Mulai Scan</button>
-                <button class="btn btn-outline" onclick="stopQR()" style="margin-left:8px"><i class="fas fa-stop"></i> Berhenti</button>
-              </div>
-            </div>
+            <div class="card"><div class="card-header"><h3>Scan QR Code</h3></div><div class="card-body" style="text-align:center">
+              <div class="form-group" style="max-width:300px;margin:0 auto 16px"><label>Ekskul</label><select id="qrEkskul"><option value="">-- Pilih --</option></select></div>
+              <div id="qrReader" style="margin-bottom:16px"></div>
+              <div id="qrResult"></div>
+              <button class="btn btn-primary" onclick="startQR()"><i class="fas fa-qrcode"></i> Mulai Scan</button>
+              <button class="btn btn-outline" onclick="stopQR()" style="margin-left:8px"><i class="fas fa-stop"></i> Berhenti</button>
+            </div></div>
           </div>
         </div>
         <div id="absensiOTView" style="display:none"></div>
       </div>
 
+      <!-- KEUANGAN -->
       <div class="page" id="pageKeuangan">
         <div id="keuanganAdminView">
           <div class="stats-grid" id="keuanganStats"></div>
-          <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab(this,'tabPemasukan');loadKeuangan('Pemasukan')">Pemasukan</button>
-            <button class="tab-btn" onclick="switchTab(this,'tabPengeluaran');loadKeuangan('Pengeluaran')">Pengeluaran</button>
-          </div>
-          <div class="tab-content active" id="tabPemasukan">
-            <div class="card">
-              <div class="card-header"><h3><i class="fas fa-arrow-down" style="color:var(--success)"></i> Pemasukan</h3><button class="btn btn-primary btn-sm" onclick="openModalKeuangan('Pemasukan')"><i class="fas fa-plus"></i> Tambah</button></div>
-              <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Jumlah</th><th>Ekskul</th><th>NIS</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="tbPemasukan"></tbody></table></div></div>
-            </div>
-          </div>
-          <div class="tab-content" id="tabPengeluaran">
-            <div class="card">
-              <div class="card-header"><h3><i class="fas fa-arrow-up" style="color:var(--danger)"></i> Pengeluaran</h3><button class="btn btn-danger btn-sm" onclick="openModalKeuangan('Pengeluaran')"><i class="fas fa-plus"></i> Tambah</button></div>
-              <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Jumlah</th><th>Ekskul</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody id="tbPengeluaran"></tbody></table></div></div>
-            </div>
-          </div>
+          <div class="tabs no-print"><button class="tab-btn active" onclick="switchTab(this,'tabPemasukan');loadKeuangan('Pemasukan')">Pemasukan</button><button class="tab-btn" onclick="switchTab(this,'tabPengeluaran');loadKeuangan('Pengeluaran')">Pengeluaran</button><button class="tab-btn" onclick="switchTab(this,'tabIuran');previewIuran()">Generate Iuran</button></div>
+          <div class="tab-content active" id="tabPemasukan"><div class="card"><div class="card-header"><h3><i class="fas fa-arrow-down" style="color:var(--success)"></i> Pemasukan</h3><button class="btn btn-primary btn-sm no-print" onclick="openModalKeuangan('Pemasukan')"><i class="fas fa-plus"></i> Tambah</button></div><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Jumlah</th><th>Ekskul</th><th>NIS</th><th>Keterangan</th><th class="no-print">Aksi</th></tr></thead><tbody id="tbPemasukan"></tbody></table></div></div></div></div>
+          <div class="tab-content" id="tabPengeluaran"><div class="card"><div class="card-header"><h3><i class="fas fa-arrow-up" style="color:var(--danger)"></i> Pengeluaran</h3><button class="btn btn-danger btn-sm no-print" onclick="openModalKeuangan('Pengeluaran')"><i class="fas fa-plus"></i> Tambah</button></div><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Jumlah</th><th>Ekskul</th><th>Keterangan</th><th class="no-print">Aksi</th></tr></thead><tbody id="tbPengeluaran"></tbody></table></div></div></div></div>
+          <div class="tab-content" id="tabIuran"><div id="iuranContent"></div></div>
         </div>
         <div id="keuanganOTView" style="display:none"></div>
       </div>
 
+      <!-- LAPORAN -->
       <div class="page" id="pageLaporan">
-        <div class="card" style="margin-bottom:20px">
-          <div class="card-header"><h3><i class="fas fa-filter"></i> Filter Laporan</h3></div>
-          <div class="card-body">
-            <div class="filter-bar">
-              <div class="form-group"><label>Ekskul</label><select id="lapEkskul"><option value="">Semua</option></select></div>
-              <div class="form-group"><label>Bulan</label><input type="month" id="lapBulan"></div>
-              <div class="form-group"><label>Dari</label><input type="date" id="lapDari"></div>
-              <div class="form-group"><label>Sampai</label><input type="date" id="lapSampai"></div>
-              <div class="form-group" style="padding-top:4px"><button class="btn btn-primary" onclick="loadLaporan()"><i class="fas fa-search"></i> Tampilkan</button></div>
-            </div>
+        <div class="card no-print" style="margin-bottom:20px"><div class="card-header"><h3><i class="fas fa-filter"></i> Filter</h3></div><div class="card-body">
+          <div class="filter-bar">
+            <div class="form-group"><label>Ekskul</label><select id="lapEkskul"><option value="">Semua</option></select></div>
+            <div class="form-group"><label>Bulan</label><input type="month" id="lapBulan"></div>
+            <div class="form-group"><label>Dari</label><input type="date" id="lapDari"></div>
+            <div class="form-group"><label>Sampai</label><input type="date" id="lapSampai"></div>
+            <div class="form-group" style="padding-top:4px"><button class="btn btn-primary" onclick="loadLaporan()"><i class="fas fa-search"></i> Tampilkan</button></div>
           </div>
-        </div>
+        </div></div>
         <div class="stats-grid" id="lapStats"></div>
-        <div class="tabs">
-          <button class="tab-btn active" onclick="switchTab(this,'tabLapAbsen')">Absensi</button>
-          <button class="tab-btn" onclick="switchTab(this,'tabLapKeu')">Keuangan</button>
-          <button class="tab-btn" onclick="switchTab(this,'tabLapRekap')">Rekap per Siswa</button>
-        </div>
-        <div class="tab-content active" id="tabLapAbsen">
-          <div class="card"><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Ekskul</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Masuk</th><th>Pulang</th><th>Ket</th></tr></thead><tbody id="tbLapAbsen"></tbody></table></div></div></div>
-        </div>
-        <div class="tab-content" id="tabLapKeu">
-          <div class="card"><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Tipe</th><th>Kategori</th><th>Jumlah</th><th>Ekskul</th><th>NIS</th><th>Keterangan</th></tr></thead><tbody id="tbLapKeu"></tbody></table></div></div></div>
-        </div>
-        <div class="tab-content" id="tabLapRekap">
-          <div class="card"><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alpa</th></tr></thead><tbody id="tbLapRekap"></tbody></table></div></div></div>
-        </div>
+        <div class="tabs no-print"><button class="tab-btn active" onclick="switchTab(this,'tabLapAbsen')">Absensi</button><button class="tab-btn" onclick="switchTab(this,'tabLapKeu')">Keuangan</button><button class="tab-btn" onclick="switchTab(this,'tabLapRekap')">Rekap Siswa</button></div>
+        <div class="tab-content active" id="tabLapAbsen"><div class="card"><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Ekskul</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Masuk</th><th>Pulang</th><th>Ket</th></tr></thead><tbody id="tbLapAbsen"></tbody></table></div></div></div></div>
+        <div class="tab-content" id="tabLapKeu"><div class="card"><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Tipe</th><th>Kategori</th><th>Jumlah</th><th>Ekskul</th><th>NIS</th><th>Ket</th></tr></thead><tbody id="tbLapKeu"></tbody></table></div></div></div></div>
+        <div class="tab-content" id="tabLapRekap"><div class="card"><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alpa</th></tr></thead><tbody id="tbLapRekap"></tbody></table></div></div></div></div>
+      </div>
+
+      <!-- REKAP SEMESTER -->
+      <div class="page" id="pageRekapSemester">
+        <div class="card no-print" style="margin-bottom:20px"><div class="card-header"><h3><i class="fas fa-graduation-cap"></i> Parameter Rekap Semester</h3></div><div class="card-body">
+          <div class="filter-bar">
+            <div class="form-group"><label>Ekskul</label><select id="rsEkskul"><option value="">Semua</option></select></div>
+            <div class="form-group"><label>Tahun Ajaran</label><select id="rsTA"><option>2024/2025</option><option>2025/2026</option></select></div>
+            <div class="form-group"><label>Semester</label><select id="rsSem"><option value="1">1 (Jul-Des)</option><option value="2">2 (Jan-Jun)</option></select></div>
+            <div class="form-group" style="padding-top:4px"><button class="btn btn-primary" onclick="loadRekapSemester()"><i class="fas fa-search"></i> Tampilkan</button></div>
+          </div>
+        </div></div>
+        <div id="rsInfo" style="margin-bottom:16px"></div>
+        <div class="card"><div class="card-header no-print"><h3>Rekap Kehadiran</h3><div class="toolbar-btns"><button class="btn btn-info btn-sm" onclick="exportRekapExcel()"><i class="fas fa-file-excel"></i> Excel</button><button class="btn btn-outline btn-sm" onclick="window.print()"><i class="fas fa-print"></i> Cetak</button></div></div>
+        <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Hadir</th><th>Sakit</th><th>Izin</th><th>Alpa</th><th>Total</th><th>%</th><th>Predikat</th></tr></thead><tbody id="tbRekapSem"></tbody></table></div></div></div>
       </div>
 
     </div>
   </div>
 </div>
 
-<!-- ==================== MODALS ==================== -->
-<div class="modal-overlay" id="modalJE">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modalJETitle">Tambah Jenis Ekskul</h3><button class="modal-close" onclick="closeModal('modalJE')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="jeId">
-      <div class="form-group"><label>Nama Ekskul</label><input type="text" id="jeNama" placeholder="Contoh: Pramuka"></div>
-      <div class="form-group"><label>Deskripsi</label><textarea id="jeDesk" rows="3" placeholder="Deskripsi ekskul"></textarea></div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalJE')">Batal</button><button class="btn btn-primary" onclick="saveJE()"><i class="fas fa-save"></i> Simpan</button></div>
+<!-- ===== MODALS ===== -->
+<div class="modal-overlay" id="modalSiswa">
+  <div class="modal"><div class="modal-header"><h3 id="modalSiswaTitle">Tambah Siswa</h3><button class="modal-close" onclick="closeModal('modalSiswa')"><i class="fas fa-times"></i></button></div>
+  <div class="modal-body">
+    <div class="form-row"><div class="form-group"><label>NIS</label><input type="text" id="swNis" placeholder="262701001"></div><div class="form-group"><label>Nama</label><input type="text" id="swNama" placeholder="Nama lengkap"></div></div>
+    <div class="form-row"><div class="form-group"><label>Kelas</label><select id="swKelas"><option value="">-- Pilih --</option><option>1A</option><option>1B</option><option>2A</option><option>2B</option><option>3A</option><option>3B</option><option>4A</option><option>4B</option><option>5A</option><option>5B</option><option>6A</option><option>6B</option></select></div><div class="form-group"><label>PIN (4 digit)</label><input type="text" id="swPin" maxlength="4" placeholder="1234" inputmode="numeric"></div></div>
+    <div class="form-row"><div class="form-group"><label>Nama Orang Tua</label><input type="text" id="swOrtu" placeholder="Nama ortu"></div><div class="form-group"><label>HP Orang Tua</label><input type="text" id="swHP" placeholder="08xxx"></div></div>
   </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalSiswa')">Batal</button><button class="btn btn-primary" onclick="saveSiswa()"><i class="fas fa-save"></i> Simpan</button></div></div>
+</div>
+
+<div class="modal-overlay" id="modalJE">
+  <div class="modal"><div class="modal-header"><h3 id="modalJETitle">Tambah Ekskul</h3><button class="modal-close" onclick="closeModal('modalJE')"><i class="fas fa-times"></i></button></div>
+  <div class="modal-body"><input type="hidden" id="jeId"><div class="form-group"><label>Nama</label><input type="text" id="jeNama" placeholder="Pramuka"></div><div class="form-group"><label>Deskripsi</label><textarea id="jeDesk" rows="3"></textarea></div></div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalJE')">Batal</button><button class="btn btn-primary" onclick="saveJE()"><i class="fas fa-save"></i> Simpan</button></div></div>
 </div>
 
 <div class="modal-overlay" id="modalPelatih">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modalPelatihTitle">Tambah Pelatih</h3><button class="modal-close" onclick="closeModal('modalPelatih')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="pelId">
-      <div class="form-group"><label>Nama Pelatih</label><input type="text" id="pelNama" placeholder="Nama lengkap"></div>
-      <div class="form-row">
-        <div class="form-group"><label>No. HP</label><input type="text" id="pelHP" placeholder="08xxxxxxxxxx"></div>
-        <div class="form-group"><label>Ekskul</label><select id="pelEkskul"><option value="">-- Pilih --</option></select></div>
-      </div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalPelatih')">Batal</button><button class="btn btn-primary" onclick="savePelatih()"><i class="fas fa-save"></i> Simpan</button></div>
-  </div>
+  <div class="modal"><div class="modal-header"><h3 id="modalPelatihTitle">Tambah Pelatih</h3><button class="modal-close" onclick="closeModal('modalPelatih')"><i class="fas fa-times"></i></button></div>
+  <div class="modal-body"><input type="hidden" id="pelId"><div class="form-group"><label>Nama</label><input type="text" id="pelNama"></div><div class="form-row"><div class="form-group"><label>No. HP</label><input type="text" id="pelHP"></div><div class="form-group"><label>Ekskul</label><select id="pelEkskul"><option value="">-- Pilih --</option></select></div></div></div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalPelatih')">Batal</button><button class="btn btn-primary" onclick="savePelatih()"><i class="fas fa-save"></i> Simpan</button></div></div>
 </div>
 
 <div class="modal-overlay" id="modalDE">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modalDETitle">Tambah Siswa Ekskul</h3><button class="modal-close" onclick="closeModal('modalDE')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="deOldNis">
-      <div class="form-row">
-        <div class="form-group"><label>NIS</label><input type="text" id="deNis" placeholder="262701001"></div>
-        <div class="form-group"><label>Nama Siswa</label><input type="text" id="deNama" placeholder="Nama lengkap"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Kelas</label><select id="deKelas"><option value="">-- Pilih --</option><option>1A</option><option>1B</option><option>2A</option><option>2B</option><option>3A</option><option>3B</option><option>4A</option><option>4B</option><option>5A</option><option>5B</option><option>6A</option><option>6B</option></select></div>
-        <div class="form-group"><label>Ekskul</label><select id="deEkskul"><option value="">-- Pilih --</option></select></div>
-      </div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalDE')">Batal</button><button class="btn btn-primary" onclick="saveDE()"><i class="fas fa-save"></i> Simpan</button></div>
-  </div>
+  <div class="modal"><div class="modal-header"><h3>Daftarkan Siswa ke Ekskul</h3><button class="modal-close" onclick="closeModal('modalDE')"><i class="fas fa-times"></i></button></div>
+  <div class="modal-body"><div class="form-group"><label>Pilih Siswa (belum terdaftar)</label><select id="deNis"><option value="">-- Pilih --</option></select></div><div class="form-group"><label>Ekskul</label><select id="deEkskul"><option value="">-- Pilih --</option></select></div></div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalDE')">Batal</button><button class="btn btn-primary" onclick="saveDE()"><i class="fas fa-save"></i> Simpan</button></div></div>
 </div>
 
 <div class="modal-overlay" id="modalJadwal">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modalJadwalTitle">Tambah Jadwal</h3><button class="modal-close" onclick="closeModal('modalJadwal')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="jdwId">
-      <div class="form-row">
-        <div class="form-group"><label>Ekskul</label><select id="jdwEkskul" onchange="onJdwEkskulChange()"><option value="">-- Pilih --</option></select></div>
-        <div class="form-group"><label>Hari</label><select id="jdwHari"><option value="">-- Pilih --</option><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option></select></div>
-      </div>
-      <div class="form-row-3">
-        <div class="form-group"><label>Jam Mulai</label><input type="time" id="jdwMulai"></div>
-        <div class="form-group"><label>Jam Selesai</label><input type="time" id="jdwSelesai"></div>
-        <div class="form-group"><label>Tempat</label><input type="text" id="jdwTempat" placeholder="Lapangan"></div>
-      </div>
-      <div class="form-group"><label>Pelatih</label><select id="jdwPelatih"><option value="">-- Pilih --</option></select></div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalJadwal')">Batal</button><button class="btn btn-primary" onclick="saveJadwal()"><i class="fas fa-save"></i> Simpan</button></div>
+  <div class="modal"><div class="modal-header"><h3 id="modalJadwalTitle">Tambah Jadwal</h3><button class="modal-close" onclick="closeModal('modalJadwal')"><i class="fas fa-times"></i></button></div>
+  <div class="modal-body"><input type="hidden" id="jdwId">
+    <div class="form-row"><div class="form-group"><label>Ekskul</label><select id="jdwEkskul" onchange="onJdwEkskulChange()"><option value="">-- Pilih --</option></select></div><div class="form-group"><label>Hari</label><select id="jdwHari"><option value="">-- Pilih --</option><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option></select></div></div>
+    <div class="form-row-3"><div class="form-group"><label>Jam Mulai</label><input type="time" id="jdwMulai"></div><div class="form-group"><label>Jam Selesai</label><input type="time" id="jdwSelesai"></div><div class="form-group"><label>Tempat</label><input type="text" id="jdwTempat"></div></div>
+    <div class="form-group"><label>Pelatih</label><select id="jdwPelatih"><option value="">-- Pilih --</option></select></div>
   </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalJadwal')">Batal</button><button class="btn btn-primary" onclick="saveJadwal()"><i class="fas fa-save"></i> Simpan</button></div></div>
 </div>
 
 <div class="modal-overlay" id="modalKeuangan">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modalKeuTitle">Tambah Keuangan</h3><button class="modal-close" onclick="closeModal('modalKeuangan')"><i class="fas fa-times"></i></button></div>
-    <div class="modal-body">
-      <input type="hidden" id="keuId">
-      <input type="hidden" id="keuTipe">
-      <div class="form-row">
-        <div class="form-group"><label>Tanggal</label><input type="date" id="keuTanggal"></div>
-        <div class="form-group"><label>Kategori</label><select id="keuKategori"><option value="">-- Pilih --</option></select></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Jumlah (Rp)</label><input type="number" id="keuJumlah" placeholder="5000" min="0"></div>
-        <div class="form-group"><label>Ekskul</label><select id="keuEkskul"><option value="">-- Pilih --</option></select></div>
-      </div>
-      <div class="form-group" id="keuNisGroup"><label>NIS (untuk iuran siswa)</label><input type="text" id="keuNis" placeholder="Kosongkan jika bukan iuran per siswa"></div>
-      <div class="form-group"><label>Keterangan</label><textarea id="keuKet" rows="2" placeholder="Keterangan tambahan"></textarea></div>
-    </div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalKeuangan')">Batal</button><button class="btn btn-primary" onclick="saveKeuangan()"><i class="fas fa-save"></i> Simpan</button></div>
+  <div class="modal"><div class="modal-header"><h3 id="modalKeuTitle">Tambah Keuangan</h3><button class="modal-close" onclick="closeModal('modalKeuangan')"><i class="fas fa-times"></i></button></div>
+  <div class="modal-body"><input type="hidden" id="keuId"><input type="hidden" id="keuTipe">
+    <div class="form-row"><div class="form-group"><label>Tanggal</label><input type="date" id="keuTanggal"></div><div class="form-group"><label>Kategori</label><select id="keuKategori"><option value="">-- Pilih --</option></select></div></div>
+    <div class="form-row"><div class="form-group"><label>Jumlah (Rp)</label><input type="number" id="keuJumlah" min="0"></div><div class="form-group"><label>Ekskul</label><select id="keuEkskul"><option value="">-- Pilih --</option></select></div></div>
+    <div class="form-group" id="keuNisGroup"><label>NIS</label><input type="text" id="keuNis" placeholder="Kosongkan jika bukan per siswa"></div>
+    <div class="form-group"><label>Keterangan</label><textarea id="keuKet" rows="2"></textarea></div>
   </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalKeuangan')">Batal</button><button class="btn btn-primary" onclick="saveKeuangan()"><i class="fas fa-save"></i> Simpan</button></div></div>
 </div>
-
 <script>
 // =============================================
 // KONFIGURASI & STATE
 // =============================================
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwI8TQERIdvXJIvFg1CoP7zRnz_Nqj3pPDrAvccQ3uWvaHBZlsvuP81lkVJEBId760f/exec';
+const WEBAPP_URL = 'GANTI_DENGAN_URL_WEBAPP_ANDA';
 let currentUser = null;
 let cacheEkskul = [];
 let cachePelatih = [];
 let cacheSiswa = [];
+let cacheDE = [];
 let qrScanner = null;
 let chartInstances = {};
+let currentRekapData = [];
 
 // =============================================
 // UTILITY
 // =============================================
-function showLoading() { document.getElementById('loading').classList.add('active'); }
-function hideLoading() { document.getElementById('loading').classList.remove('active'); }
-
-function toast(msg, type='success') {
-  const c = document.getElementById('toastContainer');
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  const icons = { success:'fa-check-circle', error:'fa-exclamation-circle', info:'fa-info-circle' };
-  t.innerHTML = '<i class="fas '+(icons[type]||icons.info)+'"></i><span>'+msg+'</span>';
-  c.appendChild(t);
-  setTimeout(() => t.classList.add('show'), 50);
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3500);
+function showLoading(){document.getElementById('loading').classList.add('active')}
+function hideLoading(){document.getElementById('loading').classList.remove('active')}
+function toast(msg,type='success'){
+  const c=document.getElementById('toastContainer'),t=document.createElement('div');
+  t.className='toast toast-'+type;
+  const ic={success:'fa-check-circle',error:'fa-exclamation-circle',info:'fa-info-circle'};
+  t.innerHTML='<i class="fas '+(ic[type]||ic.info)+'"></i><span>'+msg+'</span>';
+  c.appendChild(t);setTimeout(()=>t.classList.add('show'),50);
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},3500);
 }
-
-function openModal(id) { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('active'); }
-function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
-
-function formatRp(n) { return 'Rp ' + Number(n||0).toLocaleString('id-ID'); }
-function today() { return new Date().toISOString().split('T')[0]; }
-function noRow(i) { return '<td>' + (i+1) + '</td>'; }
-function statusBadge(s) {
-  const m = { Hadir:'badge-green', Sakit:'badge-yellow', Izin:'badge-blue', Alpa:'badge-red' };
-  return '<span class="badge '+(m[s]||'badge-gray')+'">' + (s||'-') + '</span>';
-}
-function emptyRow(col) { return '<tr><td colspan="'+col+'" class="empty-state"><i class="fas fa-inbox"></i><p>Belum ada data</p></td></tr>'; }
+function openModal(id){document.getElementById(id).classList.add('active')}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
+function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarOverlay').classList.add('active')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('active')}
+function formatRp(n){return 'Rp '+Number(n||0).toLocaleString('id-ID')}
+function today(){return new Date().toISOString().split('T')[0]}
+function noRow(i){return '<td>'+(i+1)+'</td>'}
+function statusBadge(s){const m={Hadir:'badge-green',Sakit:'badge-yellow',Izin:'badge-blue',Alpa:'badge-red'};return '<span class="badge '+(m[s]||'badge-gray')+'">'+(s||'-')+'</span>'}
+function emptyRow(col){return '<tr><td colspan="'+col+'" class="empty-state"><i class="fas fa-inbox"></i><p>Belum ada data</p></td></tr>'}
+function maskPin(p){return p ? '****' : '-';}
 
 // =============================================
 // API CALL
 // =============================================
-async function api(action, data={}) {
-  try {
+async function api(action,data={}){
+  try{
     showLoading();
-    const res = await fetch(WEBAPP_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action, ...data })
-    });
-    const json = await res.json();
-    hideLoading();
-    if (json.success) return json.data;
-    else { toast(json.message || 'Terjadi kesalahan', 'error'); return null; }
-  } catch(e) {
-    hideLoading();
-    toast('Gagal terhubung ke server: ' + e.message, 'error');
-    return null;
-  }
+    const res=await fetch(WEBAPP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...data})});
+    const json=await res.json();hideLoading();
+    if(json.success) return json.data;
+    else{toast(json.message||'Terjadi kesalahan','error');return null;}
+  }catch(e){hideLoading();toast('Gagal terhubung: '+e.message,'error');return null;}
 }
 
 // =============================================
 // LOGIN
 // =============================================
-function toggleLogin() {
-  const f = document.getElementById('loginForm');
-  const o = document.getElementById('loginOT');
-  f.style.display = f.style.display === 'none' ? 'block' : 'none';
-  o.style.display = o.style.display === 'none' ? 'block' : 'none';
+function toggleLogin(){
+  const f=document.getElementById('loginForm'),o=document.getElementById('loginOT');
+  f.style.display=f.style.display==='none'?'block':'none';
+  o.style.display=o.style.display==='none'?'block':'none';
 }
-
-async function doLogin() {
-  const u = document.getElementById('loginUser').value.trim();
-  const p = document.getElementById('loginPass').value.trim();
-  if (!u || !p) return toast('Username dan password harus diisi', 'error');
-  const d = await api('login', { username: u, password: p });
-  if (d) { currentUser = d; initApp(); }
+async function doLogin(){
+  const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value.trim();
+  if(!u||!p) return toast('Username dan password wajib diisi','error');
+  const d=await api('login',{username:u,password:p});
+  if(d){currentUser=d;initApp();}
 }
-
-async function doLoginOT() {
-  const nis = document.getElementById('loginNIS').value.trim();
-  if (!nis) return toast('NIS harus diisi', 'error');
-  const d = await api('login', { nis });
-  if (d) { currentUser = d; initApp(); }
+async function doLoginOT(){
+  const nis=document.getElementById('loginNIS').value.trim(),pin=document.getElementById('loginPIN').value.trim();
+  if(!nis) return toast('NIS wajib diisi','error');
+  if(!pin||pin.length!==4) return toast('PIN harus 4 digit','error');
+  const d=await api('login',{nis,pin});
+  if(d){currentUser=d;initApp();}
 }
-
-function doLogout() {
-  currentUser = null;
-  document.getElementById('mainApp').style.display = 'none';
-  document.getElementById('loginPage').style.display = 'flex';
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
-  document.getElementById('loginNIS').value = '';
-  Object.values(chartInstances).forEach(c => c.destroy());
-  chartInstances = {};
+function doLogout(){
+  currentUser=null;document.getElementById('mainApp').style.display='none';
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';
+  document.getElementById('loginNIS').value='';document.getElementById('loginPIN').value='';
+  Object.values(chartInstances).forEach(c=>c.destroy());chartInstances={};
 }
 
 // =============================================
-// INISIALISASI APLIKASI
+// INIT APP
 // =============================================
-async function initApp() {
-  document.getElementById('loginPage').style.display = 'none';
-  document.getElementById('mainApp').style.display = 'block';
-  document.getElementById('sidebarUserName').textContent = currentUser.nama;
-  document.getElementById('sidebarUserRole').textContent = currentUser.role;
-  document.getElementById('topbarDate').textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+async function initApp(){
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('mainApp').style.display='block';
+  document.getElementById('sidebarUserName').textContent=currentUser.nama;
+  document.getElementById('sidebarUserRole').textContent=currentUser.role;
+  document.getElementById('topbarDate').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-  // Load dropdown data
-  cacheEkskul = (await api('getJenisEkskul')) || [];
-  cachePelatih = (await api('getPelatih')) || [];
-  cacheSiswa = (await api('getDataEkskul')) || [];
+  cacheEkskul=(await api('getJenisEkskul'))||[];
+  cachePelatih=(await api('getPelatih'))||[];
+  cacheSiswa=(await api('getSiswa'))||[];
+  cacheDE=(await api('getDataEkskul'))||[];
 
-  buildSidebar();
-  navigateTo('Dashboard');
+  // Dropdown ekskul OT
+  if(currentUser.role==='OrangTua'){
+    const sw=document.getElementById('otEkskulSwitch');
+    sw.style.display='block';
+    sw.innerHTML=currentUser.ekskulIds.map((id,i)=>'<option value="'+id+'"'+(id===currentUser.currentEkskulId?' selected':'')+'>'+currentUser.ekskulNames[i]+'</option>').join('');
+  } else { document.getElementById('otEkskulSwitch').style.display='none'; }
+
+  buildSidebar();navigateTo('Dashboard');
 }
 
 // =============================================
-// SIDEBAR / NAVIGASI
+// SIDEBAR
 // =============================================
-function buildSidebar() {
-  const nav = document.getElementById('sidebarNav');
-  let items = [];
-  const r = currentUser.role;
-
-  if (r === 'Admin') {
-    items = [
-      {id:'Dashboard',icon:'fa-tachometer-alt',label:'Dashboard'},
-      {id:'JenisEkskul',icon:'fa-layer-group',label:'Jenis Ekskul'},
-      {id:'Pelatih',icon:'fa-chalkboard-teacher',label:'Data Pelatih'},
-      {id:'DataEkskul',icon:'fa-users',label:'Data Siswa Ekskul'},
-      {id:'Jadwal',icon:'fa-calendar-alt',label:'Jadwal Ekskul'},
-      {id:'Absensi',icon:'fa-clipboard-check',label:'Absensi Ekskul'},
-      {id:'Keuangan',icon:'fa-wallet',label:'Keuangan'},
-      {id:'Laporan',icon:'fa-chart-bar',label:'Laporan'}
-    ];
-  } else if (r === 'Pelatih') {
-    items = [
-      {id:'Dashboard',icon:'fa-tachometer-alt',label:'Dashboard'},
-      {id:'Absensi',icon:'fa-clipboard-check',label:'Absensi Ekskul'},
-      {id:'Laporan',icon:'fa-chart-bar',label:'Laporan Absensi'}
-    ];
-  } else {
-    items = [
-      {id:'Dashboard',icon:'fa-tachometer-alt',label:'Dashboard'},
-      {id:'Absensi',icon:'fa-clipboard-check',label:'Absensi Saya'},
-      {id:'Keuangan',icon:'fa-wallet',label:'Pembayaran'}
-    ];
-  }
-
-  nav.innerHTML = items.map(it =>
-    '<div class="nav-item" data-page="page'+it.id+'" onclick="navigateTo(\''+it.id+'\')"><i class="fas '+it.icon+'"></i><span>'+it.label+'</span></div>'
-  ).join('');
+function buildSidebar(){
+  const nav=document.getElementById('sidebarNav');let items=[];const r=currentUser.role;
+  if(r==='Admin') items=[
+    {id:'Dashboard',icon:'fa-tachometer-alt',label:'Dashboard'},
+    {id:'Siswa',icon:'fa-user-graduate',label:'Data Siswa'},
+    {id:'JenisEkskul',icon:'fa-layer-group',label:'Jenis Ekskul'},
+    {id:'Pelatih',icon:'fa-chalkboard-teacher',label:'Data Pelatih'},
+    {id:'DataEkskul',icon:'fa-clipboard-list',label:'Pendaftaran Ekskul'},
+    {id:'Jadwal',icon:'fa-calendar-alt',label:'Jadwal'},
+    {id:'Absensi',icon:'fa-clipboard-check',label:'Absensi'},
+    {id:'Keuangan',icon:'fa-wallet',label:'Keuangan'},
+    {id:'Laporan',icon:'fa-chart-bar',label:'Laporan'},
+    {id:'RekapSemester',icon:'fa-graduation-cap',label:'Rekap Semester'}
+  ];
+  else if(r==='Pelatih') items=[
+    {id:'Dashboard',icon:'fa-tachometer-alt',label:'Dashboard'},
+    {id:'Absensi',icon:'fa-clipboard-check',label:'Absensi'},
+    {id:'Laporan',icon:'fa-chart-bar',label:'Laporan'},
+    {id:'RekapSemester',icon:'fa-graduation-cap',label:'Rekap Semester'}
+  ];
+  else items=[
+    {id:'Dashboard',icon:'fa-tachometer-alt',label:'Dashboard'},
+    {id:'Absensi',icon:'fa-clipboard-check',label:'Absensi'},
+    {id:'Keuangan',icon:'fa-wallet',label:'Pembayaran'},
+    {id:'RekapSemester',icon:'fa-graduation-cap',label:'Rekap Semester'}
+  ];
+  nav.innerHTML=items.map(it=>'<div class="nav-item" data-page="page'+it.id+'" onclick="navigateTo(\''+it.id+'\')"><i class="fas '+it.icon+'"></i><span>'+it.label+'</span></div>').join('');
 }
 
-function navigateTo(page) {
+function navigateTo(page){
   closeSidebar();
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const el = document.getElementById('page' + page);
-  if (el) el.classList.add('active');
-  const navEl = document.querySelector('.nav-item[data-page="page'+page+'"]');
-  if (navEl) navEl.classList.add('active');
-
-  const titles = { Dashboard:'Dashboard', JenisEkskul:'Jenis Ekskul', Pelatih:'Data Pelatih', DataEkskul:'Data Siswa Ekskul', Jadwal:'Jadwal Ekskul', Absensi:'Absensi Ekskul', Keuangan:'Keuangan', Laporan:'Laporan' };
-  document.getElementById('pageTitle').textContent = titles[page] || page;
-
-  // Load data halaman
-  switch(page) {
-    case 'Dashboard': loadDashboard(); break;
-    case 'JenisEkskul': loadJenisEkskul(); break;
-    case 'Pelatih': loadPelatih(); break;
-    case 'DataEkskul': loadDataEkskul(); break;
-    case 'Jadwal': loadJadwal(); break;
-    case 'Absensi': loadAbsensiPage(); break;
-    case 'Keuangan': loadKeuanganPage(); break;
-    case 'Laporan': loadLaporanPage(); break;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el=document.getElementById('page'+page);if(el) el.classList.add('active');
+  const navEl=document.querySelector('.nav-item[data-page="page'+page+'"]');if(navEl) navEl.classList.add('active');
+  const titles={Dashboard:'Dashboard',Siswa:'Data Siswa',JenisEkskul:'Jenis Ekskul',Pelatih:'Data Pelatih',DataEkskul:'Pendaftaran Ekskul',Jadwal:'Jadwal',Absensi:'Absensi',Keuangan:'Keuangan',Laporan:'Laporan',RekapSemester:'Rekap Semester'};
+  document.getElementById('pageTitle').textContent=titles[page]||page;
+  switch(page){
+    case 'Dashboard':loadDashboard();break;case 'Siswa':loadSiswa();break;
+    case 'JenisEkskul':loadJenisEkskul();break;case 'Pelatih':loadPelatih();break;
+    case 'DataEkskul':loadDataEkskul();break;case 'Jadwal':loadJadwal();break;
+    case 'Absensi':loadAbsensiPage();break;case 'Keuangan':loadKeuanganPage();break;
+    case 'Laporan':loadLaporanPage();break;case 'RekapSemester':loadRekapSemPage();break;
   }
 }
 
-function switchTab(btn, tabId) {
-  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const parent = btn.closest('.page') || btn.closest('.tab-content')?.parentElement;
-  if (parent) parent.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+function switchTab(btn,tabId){
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  const parent=btn.closest('.page')||btn.closest('.tab-content')?.parentElement;
+  if(parent) parent.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
 }
 
-// =============================================
-// FILL DROPDOWN EKSKUL
-// =============================================
-function fillEkskulDropdown(selectId, selected='') {
-  const s = document.getElementById(selectId);
-  if (!s) return;
-  const val = s.value;
-  s.innerHTML = '<option value="">-- Pilih --</option>' + cacheEkskul.map(e =>
-    '<option value="'+e.id+'"'+(e.id===selected?' selected':'')+'>'+e.nama+'</option>'
-  ).join('');
-  if (!selected && val) s.value = val;
+// Switch ekskul untuk Orang Tua
+async function switchOTEkskul(eid){
+  currentUser.currentEkskulId=eid;
+  const e=cacheEkskul.find(x=>x.id===eid);
+  currentUser.currentEkskulNama=e?e.nama:'-';
+  // Refresh halaman aktif
+  const activePage=document.querySelector('.page.active');
+  if(activePage) {
+    const pageId=activePage.id.replace('page','');
+    navigateTo(pageId);
+  }
 }
 
-function fillPelatihDropdown(selectId, ekskulId='', selected='') {
-  const s = document.getElementById(selectId);
-  if (!s) return;
-  let list = cachePelatih;
-  if (ekskulId) list = list.filter(p => p.ekskulId === ekskulId);
-  s.innerHTML = '<option value="">-- Pilih --</option>' + list.map(p =>
-    '<option value="'+p.id+'"'+(p.id===selected?' selected':'')+'>'+p.nama+'</option>'
-  ).join('');
+// =============================================
+// DROPDOWN HELPERS
+// =============================================
+function fillEkskulDD(sid,sel=''){
+  const s=document.getElementById(sid);if(!s) return;const v=s.value;
+  s.innerHTML='<option value="">-- Pilih --</option>'+cacheEkskul.map(e=>'<option value="'+e.id+'"'+(e.id===sel?' selected':'')+'>'+e.nama+'</option>').join('');
+  if(!sel&&v) s.value=v;
+}
+function fillPelatihDD(sid,eid='',sel=''){
+  const s=document.getElementById(sid);if(!s) return;
+  let list=cachePelatih;if(eid) list=list.filter(p=>p.ekskulId===eid);
+  s.innerHTML='<option value="">-- Pilih --</option>'+list.map(p=>'<option value="'+p.id+'"'+(p.id===sel?' selected':'')+'>'+p.nama+'</option>').join('');
 }
 
 // =============================================
 // DASHBOARD
 // =============================================
-async function loadDashboard() {
-  const d = await api('getDashboard', {
-    role: currentUser.role,
-    ekskulId: currentUser.ekskulId || '',
-    nis: currentUser.nis || ''
-  });
-  if (!d) return;
-  const el = document.getElementById('pageDashboard');
+async function loadDashboard(){
+  const d=await api('getDashboard',{role:currentUser.role,ekskulId:currentUser.ekskulId||'',nis:currentUser.nis||'',currentEkskulId:currentUser.currentEkskulId||''});
+  if(!d) return;const el=document.getElementById('pageDashboard');
+  Object.values(chartInstances).forEach(c=>c.destroy());chartInstances={};
 
-  // Destroy chart lama
-  Object.values(chartInstances).forEach(c => c.destroy());
-  chartInstances = {};
+  if(currentUser.role==='OrangTua'){el.innerHTML=renderDashOT(d);return;}
+  if(currentUser.role==='Pelatih'){el.innerHTML=renderDashPel(d);return;}
 
-  if (currentUser.role === 'OrangTua') {
-    el.innerHTML = renderDashboardOT(d);
-    return;
-  }
-
-  if (currentUser.role === 'Pelatih') {
-    el.innerHTML = renderDashboardPelatih(d);
-    return;
-  }
-
-  // Admin Dashboard
-  el.innerHTML = `
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-icon green"><i class="fas fa-users"></i></div><div class="stat-info"><h3>${d.totalSiswa}</h3><p>Total Siswa Ekskul</p></div></div>
-      <div class="stat-card"><div class="stat-icon teal"><i class="fas fa-layer-group"></i></div><div class="stat-info"><h3>${d.totalEkskul}</h3><p>Jenis Ekskul</p></div></div>
-      <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-info"><h3>${d.totalPelatih}</h3><p>Pelatih / Pembina</p></div></div>
-      <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-arrow-down"></i></div><div class="stat-info"><h3>${formatRp(d.totalPemasukan)}</h3><p>Pemasukan Bulan Ini</p></div></div>
-      <div class="stat-card"><div class="stat-icon red"><i class="fas fa-arrow-up"></i></div><div class="stat-info"><h3>${formatRp(d.totalPengeluaran)}</h3><p>Pengeluaran Bulan Ini</p></div></div>
-      <div class="stat-card"><div class="stat-icon green"><i class="fas fa-balance-scale"></i></div><div class="stat-info"><h3>${formatRp(d.saldo)}</h3><p>Saldo Bulan Ini</p></div></div>
-    </div>
-    ${d.jadwalHariIni.length ? `
-    <div class="card" style="margin-bottom:20px">
-      <div class="card-header"><h3><i class="fas fa-calendar-day"></i> Jadwal Hari Ini</h3></div>
-      <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Ekskul</th><th>Jam</th><th>Tempat</th><th>Pelatih</th></tr></thead><tbody>
-      ${d.jadwalHariIni.map(j => {
-        const e = cacheEkskul.find(x=>x.id===j.ekskulId);
-        const p = cachePelatih.find(x=>x.id===j.pelatihId);
-        return '<tr><td>'+(e?e.nama:'-')+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td><td>'+(p?p.nama:'-')+'</td></tr>';
-      }).join('')}
-      </tbody></table></div></div>
-    </div>` : ''}
-    <div class="charts-grid">
-      <div class="card"><div class="card-header"><h3>Absensi per Ekskul</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartAbs"></canvas></div></div></div>
-      <div class="card"><div class="card-header"><h3>Keuangan 6 Bulan Terakhir</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartKeu"></canvas></div></div></div>
-    </div>
-  `;
-
-  // Chart Absensi
-  const ctxAbs = document.getElementById('chartAbs');
-  if (ctxAbs && d.chartAbsensi.length) {
-    chartInstances.abs = new Chart(ctxAbs, {
-      type: 'bar',
-      data: {
-        labels: d.chartAbsensi.map(x => x.nama),
-        datasets: [
-          { label: 'Hadir', data: d.chartAbsensi.map(x => x.hadir), backgroundColor: '#059669' },
-          { label: 'Tidak Hadir', data: d.chartAbsensi.map(x => x.tidak), backgroundColor: '#EF4444' }
-        ]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
-    });
-  }
-
-  // Chart Keuangan
-  const ctxKeu = document.getElementById('chartKeu');
-  if (ctxKeu && d.chartKeuangan.length) {
-    chartInstances.keu = new Chart(ctxKeu, {
-      type: 'line',
-      data: {
-        labels: d.chartKeuangan.map(x => x.bulan),
-        datasets: [
-          { label: 'Pemasukan', data: d.chartKeuangan.map(x => x.masuk), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,.1)', fill: true, tension: .3 },
-          { label: 'Pengeluaran', data: d.chartKeuangan.map(x => x.keluar), borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,.1)', fill: true, tension: .3 }
-        ]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
-    });
-  }
-}
-
-function renderDashboardOT(d) {
-  return `
-    <div class="ot-profile">
-      <div class="ot-avatar">${(d.siswa?.nama||'?').charAt(0)}</div>
-      <div><h3>${d.siswa?.nama||'-'}</h3><p>NIS: ${d.siswa?.nis||'-'} | Kelas: ${d.siswa?.kelas||'-'}</p><p>Ekskul: ${d.ekskul?.nama||'-'}</p></div>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h3>${d.hadir}</h3><p>Hadir</p></div></div>
-      <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-thermometer-half"></i></div><div class="stat-info"><h3>${d.sakit}</h3><p>Sakit</p></div></div>
-      <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-envelope"></i></div><div class="stat-info"><h3>${d.izin}</h3><p>Izin</p></div></div>
-      <div class="stat-card"><div class="stat-icon red"><i class="fas fa-times-circle"></i></div><div class="stat-info"><h3>${d.alpa}</h3><p>Alpa</p></div></div>
-      <div class="stat-card" style="grid-column:1/-1"><div class="stat-icon green"><i class="fas fa-wallet"></i></div><div class="stat-info"><h3>${formatRp(d.totalBayar)}</h3><p>Total Pembayaran Ekskul</p></div></div>
-    </div>
-    ${d.jadwal.length ? `
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-calendar-alt"></i> Jadwal Ekskul</h3></div>
-      <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Hari</th><th>Jam</th><th>Tempat</th><th>Pelatih</th></tr></thead><tbody>
-      ${d.jadwal.map(j => {
-        const p = cachePelatih.find(x=>x.id===j.pelatihId);
-        return '<tr><td>'+j.hari+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td><td>'+(p?p.nama:'-')+'</td></tr>';
-      }).join('')}
-      </tbody></table></div></div>
-    </div>` : ''}
-    ${d.absensiTerakhir.length ? `
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-history"></i> Riwayat Absensi Terakhir</h3></div>
-      <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Status</th><th>Jam Masuk</th><th>Jam Pulang</th><th>Keterangan</th></tr></thead><tbody>
-      ${d.absensiTerakhir.map(a => '<tr><td>'+a.tanggal+'</td><td>'+statusBadge(a.status)+'</td><td>'+(a.jamMulai||'-')+'</td><td>'+(a.jamPulang||'-')+'</td><td>'+(a.keterangan||'-')+'</td></tr>').join('')}
-      </tbody></table></div></div>
-    </div>` : ''}
-  `;
-}
-
-function renderDashboardPelatih(d) {
-  return `
-    <div class="ot-profile">
-      <div class="ot-avatar"><i class="fas fa-chalkboard-teacher" style="font-size:28px"></i></div>
-      <div><h3>${currentUser.nama}</h3><p>Ekskul: ${d.namaEkskul||'-'}</p></div>
-    </div>
+  el.innerHTML=`
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-icon green"><i class="fas fa-users"></i></div><div class="stat-info"><h3>${d.totalSiswa}</h3><p>Total Siswa</p></div></div>
-      <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-clipboard-check"></i></div><div class="stat-info"><h3>${d.absensiBulanIni}</h3><p>Absensi Bulan Ini</p></div></div>
-      <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-calendar-day"></i></div><div class="stat-info"><h3>${d.jadwalHariIni.length}</h3><p>Jadwal Hari Ini</p></div></div>
+      <div class="stat-card"><div class="stat-icon teal"><i class="fas fa-layer-group"></i></div><div class="stat-info"><h3>${d.totalEkskul}</h3><p>Jenis Ekskul</p></div></div>
+      <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-chalkboard-teacher"></i></div><div class="stat-info"><h3>${d.totalPelatih}</h3><p>Pelatih</p></div></div>
+      <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-arrow-down"></i></div><div class="stat-info"><h3>${formatRp(d.totalPemasukan)}</h3><p>Pemasukan Bulan Ini</p></div></div>
+      <div class="stat-card"><div class="stat-icon red"><i class="fas fa-arrow-up"></i></div><div class="stat-info"><h3>${formatRp(d.totalPengeluaran)}</h3><p>Pengeluaran Bulan Ini</p></div></div>
+      <div class="stat-card"><div class="stat-icon green"><i class="fas fa-balance-scale"></i></div><div class="stat-info"><h3>${formatRp(d.saldo)}</h3><p>Saldo</p></div></div>
     </div>
-    ${d.jadwal.length ? `
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-calendar-alt"></i> Jadwal Anda</h3></div>
-      <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Hari</th><th>Jam</th><th>Tempat</th></tr></thead><tbody>
-      ${d.jadwal.map(j => '<tr><td>'+j.hari+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td></tr>').join('')}
-      </tbody></table></div></div>
-    </div>` : ''}
-  `;
+    ${d.jadwalHariIni.length?`<div class="card" style="margin-bottom:20px"><div class="card-header"><h3><i class="fas fa-calendar-day"></i> Jadwal Hari Ini</h3></div><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Ekskul</th><th>Jam</th><th>Tempat</th><th>Pelatih</th></tr></thead><tbody>${d.jadwalHariIni.map(j=>{const e=cacheEkskul.find(x=>x.id===j.ekskulId);const p=cachePelatih.find(x=>x.id===j.pelatihId);return '<tr><td>'+(e?e.nama:'-')+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td><td>'+(p?p.nama:'-')+'</td></tr>';}).join('')}</tbody></table></div></div></div>`:''}
+    <div class="charts-grid">
+      <div class="card"><div class="card-header"><h3>Absensi per Ekskul</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartAbs"></canvas></div></div></div>
+      <div class="card"><div class="card-header"><h3>Keuangan 6 Bulan</h3></div><div class="card-body"><div class="chart-container"><canvas id="chartKeu"></canvas></div></div></div>
+    </div>`;
+  const c1=document.getElementById('chartAbs');
+  if(c1&&d.chartAbsensi.length) chartInstances.abs=new Chart(c1,{type:'bar',data:{labels:d.chartAbsensi.map(x=>x.nama),datasets:[{label:'Hadir',data:d.chartAbsensi.map(x=>x.hadir),backgroundColor:'#059669'},{label:'Tidak Hadir',data:d.chartAbsensi.map(x=>x.tidak),backgroundColor:'#EF4444'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}}}});
+  const c2=document.getElementById('chartKeu');
+  if(c2&&d.chartKeuangan.length) chartInstances.keu=new Chart(c2,{type:'line',data:{labels:d.chartKeuangan.map(x=>x.bulan),datasets:[{label:'Pemasukan',data:d.chartKeuangan.map(x=>x.masuk),borderColor:'#059669',backgroundColor:'rgba(5,150,105,.1)',fill:true,tension:.3},{label:'Pengeluaran',data:d.chartKeuangan.map(x=>x.keluar),borderColor:'#EF4444',backgroundColor:'rgba(239,68,68,.1)',fill:true,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}});
+}
+
+function renderDashOT(d){
+  return `<div class="ot-profile"><div class="ot-avatar">${(d.siswa?.nama||'?').charAt(0)}</div><div><h3>${d.siswa?.nama||'-'}</h3><p>NIS: ${d.siswa?.nis||'-'} | Kelas: ${d.siswa?.kelas||'-'}</p><p>Ortu: ${d.siswa?.namaOrtu||'-'} | Ekskul: ${currentUser.currentEkskulNama||'-'}</p></div></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h3>${d.hadir}</h3><p>Hadir</p></div></div>
+    <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-thermometer-half"></i></div><div class="stat-info"><h3>${d.sakit}</h3><p>Sakit</p></div></div>
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-envelope"></i></div><div class="stat-info"><h3>${d.izin}</h3><p>Izin</p></div></div>
+    <div class="stat-card"><div class="stat-icon red"><i class="fas fa-times-circle"></i></div><div class="stat-info"><h3>${d.alpa}</h3><p>Alpa</p></div></div>
+    <div class="stat-card" style="grid-column:1/-1"><div class="stat-icon green"><i class="fas fa-wallet"></i></div><div class="stat-info"><h3>${formatRp(d.totalBayar)}</h3><p>Total Pembayaran</p></div></div>
+  </div>
+  ${d.jadwal.length?'<div class="card"><div class="card-header"><h3><i class="fas fa-calendar-alt"></i> Jadwal</h3></div><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Hari</th><th>Jam</th><th>Tempat</th><th>Pelatih</th></tr></thead><tbody>'+d.jadwal.map(j=>{const p=cachePelatih.find(x=>x.id===j.pelatihId);return '<tr><td>'+j.hari+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td><td>'+(p?p.nama:'-')+'</td></tr>';}).join('')+'</tbody></table></div></div></div>':''}
+  ${d.absensiTerakhir.length?'<div class="card"><div class="card-header"><h3><i class="fas fa-history"></i> Riwayat Absensi</h3></div><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Status</th><th>Masuk</th><th>Pulang</th><th>Ket</th></tr></thead><tbody>'+d.absensiTerakhir.map(a=>'<tr><td>'+a.tanggal+'</td><td>'+statusBadge(a.status)+'</td><td>'+(a.jamMulai||'-')+'</td><td>'+(a.jamPulang||'-')+'</td><td>'+(a.keterangan||'-')+'</td></tr>').join('')+'</tbody></table></div></div></div>':''}`;
+}
+
+function renderDashPel(d){
+  return `<div class="ot-profile"><div class="ot-avatar"><i class="fas fa-chalkboard-teacher" style="font-size:28px"></i></div><div><h3>${currentUser.nama}</h3><p>Ekskul: ${d.namaEkskul||'-'}</p></div></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-users"></i></div><div class="stat-info"><h3>${d.totalSiswa}</h3><p>Total Siswa</p></div></div>
+    <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-clipboard-check"></i></div><div class="stat-info"><h3>${d.absensiBulanIni}</h3><p>Absensi Bulan Ini</p></div></div>
+    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-calendar-day"></i></div><div class="stat-info"><h3>${d.jadwalHariIni.length}</h3><p>Jadwal Hari Ini</p></div></div>
+  </div>
+  ${d.jadwal.length?'<div class="card"><div class="card-header"><h3><i class="fas fa-calendar-alt"></i> Jadwal Anda</h3></div><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>Hari</th><th>Jam</th><th>Tempat</th></tr></thead><tbody>'+d.jadwal.map(j=>'<tr><td>'+j.hari+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td></tr>').join('')+'</tbody></table></div></div></div>':''}`;
 }
 
 // =============================================
-// JENIS EKSKUL
+// SISWA CRUD
 // =============================================
-async function loadJenisEkskul() {
-  cacheEkskul = (await api('getJenisEkskul')) || [];
-  const tb = document.getElementById('tbJE');
-  tb.innerHTML = cacheEkskul.length ? cacheEkskul.map((e,i) =>
-    '<tr>'+noRow(i)+'<td>'+e.nama+'</td><td>'+(e.deskripsi||'-')+'</td><td class="action-btns">'+
-    '<button class="btn btn-accent btn-sm" onclick="editJE(\''+e.id+'\')"><i class="fas fa-edit"></i></button>'+
-    '<button class="btn btn-danger btn-sm" onclick="delJE(\''+e.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
-  ).join('') : emptyRow(4);
+async function loadSiswa(){
+  cacheSiswa=(await api('getSiswa'))||[];
+  document.getElementById('tbSiswa').innerHTML=cacheSiswa.length?cacheSiswa.map((s,i)=>
+    '<tr>'+noRow(i)+'<td>'+s.nis+'</td><td>'+s.nama+'</td><td>'+s.kelas+'</td><td>'+(s.namaOrtu||'-')+'</td><td>'+(s.hpOrtu||'-')+'</td><td>'+maskPin(s.pin)+'</td><td class="action-btns no-print"><button class="btn btn-accent btn-sm" onclick="editSiswa(\''+s.nis+'\')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="delSiswa(\''+s.nis+'\')"><i class="fas fa-trash"></i></button></td></tr>'
+  ).join(''):emptyRow(8);
 }
-
-function openModalJE(data=null) {
-  document.getElementById('modalJETitle').textContent = data ? 'Edit Jenis Ekskul' : 'Tambah Jenis Ekskul';
-  document.getElementById('jeId').value = data ? data.id : '';
-  document.getElementById('jeNama').value = data ? data.nama : '';
-  document.getElementById('jeDesk').value = data ? data.deskripsi : '';
-  openModal('modalJE');
+function openModalSiswa(d=null){
+  document.getElementById('modalSiswaTitle').textContent=d?'Edit Siswa':'Tambah Siswa';
+  document.getElementById('swNis').value=d?d.nis:'';document.getElementById('swNama').value=d?d.nama:'';
+  document.getElementById('swKelas').value=d?d.kelas:'';document.getElementById('swPin').value='';
+  document.getElementById('swOrtu').value=d?d.namaOrtu||'':'';document.getElementById('swHP').value=d?d.hpOrtu||'':'';
+  document.getElementById('swNis').readOnly=!!d;
+  openModal('modalSiswa');
 }
-
-function editJE(id) { const d = cacheEkskul.find(e=>e.id===id); if(d) openModalJE(d); }
-
-async function saveJE() {
-  const nama = document.getElementById('jeNama').value.trim();
-  if (!nama) return toast('Nama ekskul harus diisi','error');
-  const d = await api('saveJenisEkskul', { id: document.getElementById('jeId').value, nama, deskripsi: document.getElementById('jeDesk').value.trim() });
-  if (d) { toast('Jenis Ekskul disimpan'); closeModal('modalJE'); loadJenisEkskul(); }
+function editSiswa(nis){const d=cacheSiswa.find(s=>s.nis===nis);if(d) openModalSiswa(d);}
+async function saveSiswa(){
+  const nis=document.getElementById('swNis').value.trim(),nama=document.getElementById('swNama').value.trim();
+  const kelas=document.getElementById('swKelas').value,pin=document.getElementById('swPin').value.trim();
+  const namaOrtu=document.getElementById('swOrtu').value.trim(),hpOrtu=document.getElementById('swHP').value.trim();
+  if(!nis||!nama||!kelas) return toast('NIS, Nama, Kelas wajib diisi','error');
+  const d=await api('saveSiswa',{nis,nama,kelas,pin,namaOrtu,hpOrtu});
+  if(d){toast('Siswa disimpan');closeModal('modalSiswa');loadSiswa();}
 }
-
-async function delJE(id) {
-  if (!confirm('Hapus jenis ekskul ini?')) return;
-  const d = await api('deleteJenisEkskul', { id });
-  if (d) { toast('Berhasil dihapus'); loadJenisEkskul(); }
+async function delSiswa(nis){
+  if(!confirm('Hapus siswa dan semua pendaftaran ekskulnya?')) return;
+  const d=await api('deleteSiswa',{nis});
+  if(d){toast('Berhasil dihapus');loadSiswa();}
 }
 
 // =============================================
-// PELATIH
+// JENIS EKSKUL CRUD
 // =============================================
-async function loadPelatih() {
-  cachePelatih = (await api('getPelatih')) || [];
-  const tb = document.getElementById('tbPelatih');
-  tb.innerHTML = cachePelatih.length ? cachePelatih.map((p,i) =>
-    '<tr>'+noRow(i)+'<td>'+p.nama+'</td><td>'+(p.nohp||'-')+'</td><td>'+(p.ekskulNama||'-')+'</td><td class="action-btns">'+
-    '<button class="btn btn-accent btn-sm" onclick="editPelatih(\''+p.id+'\')"><i class="fas fa-edit"></i></button>'+
-    '<button class="btn btn-danger btn-sm" onclick="delPelatih(\''+p.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
-  ).join('') : emptyRow(5);
+async function loadJenisEkskul(){
+  cacheEkskul=(await api('getJenisEkskul'))||[];
+  document.getElementById('tbJE').innerHTML=cacheEkskul.length?cacheEkskul.map((e,i)=>
+    '<tr>'+noRow(i)+'<td>'+e.nama+'</td><td>'+(e.deskripsi||'-')+'</td><td class="action-btns no-print"><button class="btn btn-accent btn-sm" onclick="editJE(\''+e.id+'\')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="delJE(\''+e.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
+  ).join(''):emptyRow(4);
 }
-
-function openModalPelatih(data=null) {
-  fillEkskulDropdown('pelEkskul', data ? data.ekskulId : '');
-  document.getElementById('modalPelatihTitle').textContent = data ? 'Edit Pelatih' : 'Tambah Pelatih';
-  document.getElementById('pelId').value = data ? data.id : '';
-  document.getElementById('pelNama').value = data ? data.nama : '';
-  document.getElementById('pelHP').value = data ? data.nohp : '';
-  openModal('modalPelatih');
+function openModalJE(d=null){
+  document.getElementById('modalJETitle').textContent=d?'Edit Ekskul':'Tambah Ekskul';
+  document.getElementById('jeId').value=d?d.id:'';document.getElementById('jeNama').value=d?d.nama:'';
+  document.getElementById('jeDesk').value=d?d.deskripsi:'';openModal('modalJE');
 }
-
-function editPelatih(id) { const d = cachePelatih.find(p=>p.id===id); if(d) openModalPelatih(d); }
-
-async function savePelatih() {
-  const nama = document.getElementById('pelNama').value.trim();
-  if (!nama) return toast('Nama harus diisi','error');
-  const d = await api('savePelatih', { id: document.getElementById('pelId').value, nama, nohp: document.getElementById('pelHP').value.trim(), ekskulId: document.getElementById('pelEkskul').value });
-  if (d) { toast('Pelatih disimpan'); closeModal('modalPelatih'); loadPelatih(); }
+function editJE(id){const d=cacheEkskul.find(e=>e.id===id);if(d) openModalJE(d);}
+async function saveJE(){
+  const nama=document.getElementById('jeNama').value.trim();if(!nama) return toast('Nama wajib diisi','error');
+  const d=await api('saveJenisEkskul',{id:document.getElementById('jeId').value,nama,deskripsi:document.getElementById('jeDesk').value.trim()});
+  if(d){toast('Disimpan');closeModal('modalJE');loadJenisEkskul();}
 }
-
-async function delPelatih(id) {
-  if (!confirm('Hapus pelatih ini?')) return;
-  const d = await api('deletePelatih', { id });
-  if (d) { toast('Berhasil dihapus'); loadPelatih(); }
-}
+async function delJE(id){if(!confirm('Hapus?'))return;const d=await api('deleteJenisEkskul',{id});if(d){toast('Dihapus');loadJenisEkskul();}}
 
 // =============================================
-// DATA EKSKUL (SISWA)
+// PELATIH CRUD
 // =============================================
-async function loadDataEkskul() {
-  cacheSiswa = (await api('getDataEkskul')) || [];
-  const tb = document.getElementById('tbDE');
-  tb.innerHTML = cacheSiswa.length ? cacheSiswa.map((s,i) =>
-    '<tr>'+noRow(i)+'<td>'+s.nis+'</td><td>'+s.nama+'</td><td>'+s.kelas+'</td><td>'+(s.ekskulNama||'-')+'</td><td class="action-btns">'+
-    '<button class="btn btn-accent btn-sm" onclick="editDE(\''+s.nis+'\')"><i class="fas fa-edit"></i></button>'+
-    '<button class="btn btn-danger btn-sm" onclick="delDE(\''+s.nis+'\')"><i class="fas fa-trash"></i></button></td></tr>'
-  ).join('') : emptyRow(6);
+async function loadPelatih(){
+  cachePelatih=(await api('getPelatih'))||[];
+  document.getElementById('tbPelatih').innerHTML=cachePelatih.length?cachePelatih.map((p,i)=>
+    '<tr>'+noRow(i)+'<td>'+p.nama+'</td><td>'+(p.nohp||'-')+'</td><td>'+(p.ekskulNama||'-')+'</td><td class="action-btns no-print"><button class="btn btn-accent btn-sm" onclick="editPelatih(\''+p.id+'\')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="delPelatih(\''+p.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
+  ).join(''):emptyRow(5);
 }
+function openModalPelatih(d=null){
+  fillEkskulDD('pelEkskul',d?d.ekskulId:'');
+  document.getElementById('modalPelatihTitle').textContent=d?'Edit Pelatih':'Tambah Pelatih';
+  document.getElementById('pelId').value=d?d.id:'';document.getElementById('pelNama').value=d?d.nama:'';
+  document.getElementById('pelHP').value=d?d.nohp||'':'';openModal('modalPelatih');
+}
+function editPelatih(id){const d=cachePelatih.find(p=>p.id===id);if(d) openModalPelatih(d);}
+async function savePelatih(){
+  const nama=document.getElementById('pelNama').value.trim();if(!nama) return toast('Nama wajib','error');
+  const d=await api('savePelatih',{id:document.getElementById('pelId').value,nama,nohp:document.getElementById('pelHP').value.trim(),ekskulId:document.getElementById('pelEkskul').value});
+  if(d){toast('Disimpan');closeModal('modalPelatih');loadPelatih();}
+}
+async function delPelatih(id){if(!confirm('Hapus?'))return;const d=await api('deletePelatih',{id});if(d){toast('Dihapus');loadPelatih();}}
 
-function openModalDE(data=null) {
-  fillEkskulDropdown('deEkskul', data ? data.ekskulId : '');
-  document.getElementById('modalDETitle').textContent = data ? 'Edit Siswa Ekskul' : 'Tambah Siswa Ekskul';
-  document.getElementById('deOldNis').value = data ? data.nis : '';
-  document.getElementById('deNis').value = data ? data.nis : '';
-  document.getElementById('deNama').value = data ? data.nama : '';
-  document.getElementById('deKelas').value = data ? data.kelas : '';
+// =============================================
+// PENDAFTARAN EKSKUL
+// =============================================
+async function loadDataEkskul(){
+  cacheDE=(await api('getDataEkskul'))||[];
+  document.getElementById('tbDE').innerHTML=cacheDE.length?cacheDE.map((d,i)=>
+    '<tr>'+noRow(i)+'<td>'+d.nis+'</td><td>'+d.namaSiswa+'</td><td>'+d.kelas+'</td><td>'+d.ekskulNama+'</td><td class="action-btns no-print"><button class="btn btn-danger btn-sm" onclick="delDE(\''+d.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
+  ).join(''):emptyRow(6);
+}
+function openModalDE(){
+  fillEkskulDD('deEkskul');
+  // Isi dropdown siswa yang BELUM terdaftar di ekskul terpilih
+  updateDEnisDD();
+  document.getElementById('deEkskul').onchange=updateDEnisDD;
   openModal('modalDE');
 }
-
-function editDE(nis) { const d = cacheSiswa.find(s=>s.nis===nis); if(d) openModalDE(d); }
-
-async function saveDE() {
-  const nis = document.getElementById('deNis').value.trim();
-  const nama = document.getElementById('deNama').value.trim();
-  const kelas = document.getElementById('deKelas').value;
-  const ekskulId = document.getElementById('deEkskul').value;
-  if (!nis || !nama || !kelas || !ekskulId) return toast('Semua field harus diisi','error');
-  const d = await api('saveDataEkskul', { oldNis: document.getElementById('deOldNis').value, nis, nama, kelas, ekskulId });
-  if (d) { toast('Data siswa disimpan'); closeModal('modalDE'); loadDataEkskul(); }
+function updateDEnisDD(){
+  const eid=document.getElementById('deEkskul').value;
+  const registered=cacheDE.filter(d=>d.ekskulId===eid).map(d=>d.nis);
+  const available=cacheSiswa.filter(s=>!registered.includes(s.nis));
+  document.getElementById('deNis').innerHTML='<option value="">-- Pilih Siswa --</option>'+available.map(s=>'<option value="'+s.nis+'">'+s.nis+' - '+s.nama+' ('+s.kelas+')</option>').join('');
 }
-
-async function delDE(nis) {
-  if (!confirm('Hapus data siswa ini?')) return;
-  const d = await api('deleteDataEkskul', { nis });
-  if (d) { toast('Berhasil dihapus'); loadDataEkskul(); }
+async function saveDE(){
+  const nis=document.getElementById('deNis').value,ekskulId=document.getElementById('deEkskul').value;
+  if(!nis||!ekskulId) return toast('Pilih siswa dan ekskul','error');
+  const d=await api('saveDataEkskul',{nis,ekskulId});
+  if(d){toast('Siswa didaftarkan');closeModal('modalDE');loadDataEkskul();}
 }
+async function delDE(id){if(!confirm('Hapus pendaftaran?'))return;const d=await api('deleteDataEkskul',{id});if(d){toast('Dihapus');loadDataEkskul();}}
 
 // =============================================
-// JADWAL
+// JADWAL CRUD
 // =============================================
-async function loadJadwal() {
-  const data = (await api('getJadwal')) || [];
-  const tb = document.getElementById('tbJadwal');
-  tb.innerHTML = data.length ? data.map((j,i) =>
-    '<tr>'+noRow(i)+'<td>'+(j.ekskulNama||'-')+'</td><td>'+j.hari+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td><td>'+(j.pelatihNama||'-')+'</td><td class="action-btns">'+
-    '<button class="btn btn-accent btn-sm" onclick="editJadwal(\''+j.id+'\')"><i class="fas fa-edit"></i></button>'+
-    '<button class="btn btn-danger btn-sm" onclick="delJadwal(\''+j.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
-  ).join('') : emptyRow(7);
+async function loadJadwal(){
+  const data=(await api('getJadwal'))||[];
+  document.getElementById('tbJadwal').innerHTML=data.length?data.map((j,i)=>
+    '<tr>'+noRow(i)+'<td>'+j.ekskulNama+'</td><td>'+j.hari+'</td><td>'+j.jamMulai+' - '+j.jamSelesai+'</td><td>'+j.tempat+'</td><td>'+(j.pelatihNama||'-')+'</td><td class="action-btns no-print"><button class="btn btn-accent btn-sm" onclick="editJadwal(\''+j.id+'\')"><i class="fas fa-edit"></i></button><button class="btn btn-danger btn-sm" onclick="delJadwal(\''+j.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
+  ).join(''):emptyRow(7);
 }
-
-function onJdwEkskulChange() {
-  fillPelatihDropdown('jdwPelatih', document.getElementById('jdwEkskul').value);
+function onJdwEkskulChange(){fillPelatihDD('jdwPelatih',document.getElementById('jdwEkskul').value);}
+function openModalJadwal(d=null){
+  fillEkskulDD('jdwEkskul',d?d.ekskulId:'');document.getElementById('jdwHari').value=d?d.hari:'';
+  document.getElementById('jdwMulai').value=d?d.jamMulai:'';document.getElementById('jdwSelesai').value=d?d.jamSelesai:'';
+  document.getElementById('jdwTempat').value=d?d.tempat:'';
+  fillPelatihDD('jdwPelatih',d?d.ekskulId:'',d?d.pelatihId:'');
+  document.getElementById('modalJadwalTitle').textContent=d?'Edit Jadwal':'Tambah Jadwal';
+  document.getElementById('jdwId').value=d?d.id:'';openModal('modalJadwal');
 }
-
-function openModalJadwal(data=null) {
-  fillEkskulDropdown('jdwEkskul', data ? data.ekskulId : '');
-  document.getElementById('jdwHari').value = data ? data.hari : '';
-  document.getElementById('jdwMulai').value = data ? data.jamMulai : '';
-  document.getElementById('jdwSelesai').value = data ? data.jamSelesai : '';
-  document.getElementById('jdwTempat').value = data ? data.tempat : '';
-  fillPelatihDropdown('jdwPelatih', data ? data.ekskulId : '', data ? data.pelatihId : '');
-  document.getElementById('modalJadwalTitle').textContent = data ? 'Edit Jadwal' : 'Tambah Jadwal';
-  document.getElementById('jdwId').value = data ? data.id : '';
-  openModal('modalJadwal');
+function editJadwal(id){api('getJadwal').then(d=>{if(d){const j=d.find(x=>x.id===id);if(j) openModalJadwal(j);}});}
+async function saveJadwal(){
+  const ekskulId=document.getElementById('jdwEkskul').value,hari=document.getElementById('jdwHari').value;
+  const jamMulai=document.getElementById('jdwMulai').value,jamSelesai=document.getElementById('jdwSelesai').value;
+  if(!ekskulId||!hari||!jamMulai||!jamSelesai) return toast('Field wajib harus diisi','error');
+  const d=await api('saveJadwal',{id:document.getElementById('jdwId').value,ekskulId,hari,jamMulai,jamSelesai,tempat:document.getElementById('jdwTempat').value.trim(),pelatihId:document.getElementById('jdwPelatih').value});
+  if(d){toast('Disimpan');closeModal('modalJadwal');loadJadwal();}
 }
-
-function editJadwal(id) { api('getJadwal').then(d => { if(d){ const j=d.find(x=>x.id===id); if(j) openModalJadwal(j); } }); }
-
-async function saveJadwal() {
-  const ekskulId = document.getElementById('jdwEkskul').value;
-  const hari = document.getElementById('jdwHari').value;
-  const jamMulai = document.getElementById('jdwMulai').value;
-  const jamSelesai = document.getElementById('jdwSelesai').value;
-  const tempat = document.getElementById('jdwTempat').value.trim();
-  const pelatihId = document.getElementById('jdwPelatih').value;
-  if (!ekskulId || !hari || !jamMulai || !jamSelesai) return toast('Field wajib harus diisi','error');
-  const d = await api('saveJadwal', { id: document.getElementById('jdwId').value, ekskulId, hari, jamMulai, jamSelesai, tempat, pelatihId });
-  if (d) { toast('Jadwal disimpan'); closeModal('modalJadwal'); loadJadwal(); }
-}
-
-async function delJadwal(id) {
-  if (!confirm('Hapus jadwal ini?')) return;
-  const d = await api('deleteJadwal', { id });
-  if (d) { toast('Berhasil dihapus'); loadJadwal(); }
-}
+async function delJadwal(id){if(!confirm('Hapus?'))return;const d=await api('deleteJadwal',{id});if(d){toast('Dihapus');loadJadwal();}}
 
 // =============================================
 // ABSENSI
 // =============================================
-async function loadAbsensiPage() {
-  if (currentUser.role === 'OrangTua') {
-    document.getElementById('absensiAdminView').style.display = 'none';
-    document.getElementById('absensiOTView').style.display = 'block';
-    await loadAbsensiOT();
+async function loadAbsensiPage(){
+  if(currentUser.role==='OrangTua'){
+    document.getElementById('absensiAdminView').style.display='none';
+    document.getElementById('absensiOTView').style.display='block';
+    const data=(await api('getAbsensi',{nis:currentUser.nis,ekskulId:currentUser.currentEkskulId}))||[];
+    document.getElementById('absensiOTView').innerHTML='<div class="card"><div class="card-header"><h3><i class="fas fa-clipboard-check"></i> Riwayat Absensi - '+currentUser.currentEkskulNama+'</h3><div class="toolbar-btns no-print"><button class="btn btn-outline btn-sm" onclick="window.print()"><i class="fas fa-print"></i> Cetak</button><button class="btn btn-info btn-sm" onclick="exportTableToExcel(\'tabLapAbsenOT\')"><i class="fas fa-file-excel"></i> Excel</button></div></div><div class="card-body no-pad"><div class="table-wrap"><table id="tabLapAbsenOT"><thead><tr><th>No</th><th>Tanggal</th><th>Status</th><th>Masuk</th><th>Pulang</th><th>Ket</th></tr></thead><tbody>'+data.map((a,i)=>'<tr>'+noRow(i)+'<td>'+a.tanggal+'</td><td>'+statusBadge(a.status)+'</td><td>'+(a.jamMulai||'-')+'</td><td>'+(a.jamPulang||'-')+'</td><td>'+(a.keterangan||'-')+'</td></tr>').join('')+(data.length?'':emptyRow(6))+'</tbody></table></div></div></div>';
   } else {
-    document.getElementById('absensiAdminView').style.display = 'block';
-    document.getElementById('absensiOTView').style.display = 'none';
-    document.getElementById('absenTanggal').value = today();
-    // Filter ekskul dropdown berdasarkan role
-    fillEkskulDropdown('absenEkskul', currentUser.ekskulId || '');
-    fillEkskulDropdown('qrEkskul', currentUser.ekskulId || '');
-    if (currentUser.role === 'Pelatih') {
-      document.getElementById('absenEkskul').disabled = true;
-      document.getElementById('qrEkskul').disabled = true;
-      onAbsenEkskulChange();
-    }
+    document.getElementById('absensiAdminView').style.display='block';
+    document.getElementById('absensiOTView').style.display='none';
+    document.getElementById('absenTanggal').value=today();
+    fillEkskulDD('absenEkskul',currentUser.ekskulId||'');
+    fillEkskulDD('qrEkskul',currentUser.ekskulId||'');
+    if(currentUser.role==='Pelatih'){document.getElementById('absenEkskul').disabled=true;document.getElementById('qrEkskul').disabled=true;onAbsenEkskulChange();}
   }
 }
-
-async function onAbsenEkskulChange() {
-  const eid = document.getElementById('absenEkskul').value;
-  document.getElementById('absenKelas').innerHTML = '<option value="">Semua Kelas</option>';
-  if (!eid) { document.getElementById('absenSiswaList').innerHTML = ''; return; }
-  const kelas = await api('getKelasByEkskul', { ekskulId: eid });
-  if (kelas) {
-    document.getElementById('absenKelas').innerHTML = '<option value="">Semua Kelas</option>' + kelas.map(k => '<option>'+k+'</option>').join('');
-  }
+async function onAbsenEkskulChange(){
+  const eid=document.getElementById('absenEkskul').value;
+  document.getElementById('absenKelas').innerHTML='<option value="">Semua</option>';
+  if(!eid){document.getElementById('absenSiswaList').innerHTML='';return;}
+  const kelas=await api('getKelasByEkskul',{ekskulId:eid});
+  if(kelas) document.getElementById('absenKelas').innerHTML='<option value="">Semua</option>'+kelas.map(k=>'<option>'+k+'</option>').join('');
   onAbsenKelasChange();
 }
-
-async function onAbsenKelasChange() {
-  const eid = document.getElementById('absenEkskul').value;
-  const kelas = document.getElementById('absenKelas').value;
-  const tgl = document.getElementById('absenTanggal').value;
-  if (!eid) return;
-  const siswa = await api('getSiswaByFilter', { ekskulId: eid, kelas: kelas || '' });
-  if (!siswa) return;
-  // Cek absensi yang sudah ada
-  let existing = [];
-  if (tgl) { existing = (await api('getAbsensi', { ekskulId: eid, tanggal: tgl })) || []; }
-
-  document.getElementById('absenSiswaList').innerHTML = siswa.length ? '<div class="absensi-grid">' + siswa.map(s => {
-    const ex = existing.find(a => String(a.nis) === String(s.nis));
-    const st = ex ? ex.status : 'Hadir';
-    return `<div class="absensi-item ${st.toLowerCase()}" id="ai_${s.nis}">
-      <h4>${s.nama}</h4><p>NIS: ${s.nis} | ${s.kelas}</p>
-      <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap">
-        <select onchange="changeAbsenStatus('${s.nis}',this.value)" style="padding:4px 8px;font-size:11px;border-radius:6px;border:1px solid var(--border)">
-          <option value="Hadir" ${st==='Hadir'?'selected':''}>Hadir</option>
-          <option value="Sakit" ${st==='Sakit'?'selected':''}>Sakit</option>
-          <option value="Izin" ${st==='Izin'?'selected':''}>Izin</option>
-          <option value="Alpa" ${st==='Alpa'?'selected':''}>Alpa</option>
-        </select>
-      </div>
-      <div style="margin-top:6px;display:flex;gap:6px">
-        <input type="time" placeholder="Masuk" id="am_${s.nis}" value="${ex?ex.jamMulai||'':''}" style="padding:3px 6px;font-size:11px;border:1px solid var(--border);border-radius:4px;width:50%">
-        <input type="time" placeholder="Pulang" id="ap_${s.nis}" value="${ex?ex.jamPulang||'':''}" style="padding:3px 6px;font-size:11px;border:1px solid var(--border);border-radius:4px;width:50%">
-      </div>
-      <input type="text" placeholder="Keterangan" id="ak_${s.nis}" value="${ex?ex.keterangan||'':''}" style="margin-top:6px;padding:4px 8px;font-size:11px;border:1px solid var(--border);border-radius:4px;width:100%">
-    </div>`;
-  }).join('') + '</div>' : '<div class="empty-state"><i class="fas fa-users"></i><p>Tidak ada siswa untuk filter ini</p></div>';
+async function onAbsenKelasChange(){
+  const eid=document.getElementById('absenEkskul').value,kelas=document.getElementById('absenKelas').value,tgl=document.getElementById('absenTanggal').value;
+  if(!eid) return;
+  const siswa=await api('getSiswaByFilter',{ekskulId:eid,kelas:kelas||''});
+  if(!siswa) return;
+  let existing=[];if(tgl) existing=(await api('getAbsensi',{ekskulId:eid,tanggal:tgl}))||[];
+  document.getElementById('absenSiswaList').innerHTML=siswa.length?'<div class="absensi-grid">'+siswa.map(s=>{
+    const ex=existing.find(a=>String(a.nis)===String(s.nis));const st=ex?ex.status:'Hadir';
+    return `<div class="absensi-item ${st.toLowerCase()}" id="ai_${s.nis}"><h4>${s.nama}</h4><p>${s.nis} | ${s.kelas}</p>
+    <div style="margin-top:8px"><select onchange="changeAbsSt('${s.nis}',this.value)" style="padding:4px 8px;font-size:11px;border-radius:6px;border:1px solid var(--border)"><option value="Hadir" ${st==='Hadir'?'selected':''}>Hadir</option><option value="Sakit" ${st==='Sakit'?'selected':''}>Sakit</option><option value="Izin" ${st==='Izin'?'selected':''}>Izin</option><option value="Alpa" ${st==='Alpa'?'selected':''}>Alpa</option></select></div>
+    <div style="margin-top:6px;display:flex;gap:6px"><input type="time" id="am_${s.nis}" value="${ex?ex.jamMulai||'':''}" style="padding:3px 6px;font-size:11px;border:1px solid var(--border);border-radius:4px;width:50%"><input type="time" id="ap_${s.nis}" value="${ex?ex.jamPulang||'':''}" style="padding:3px 6px;font-size:11px;border:1px solid var(--border);border-radius:4px;width:50%"></div>
+    <input type="text" id="ak_${s.nis}" value="${ex?ex.keterangan||'':''}" placeholder="Keterangan" style="margin-top:6px;padding:4px 8px;font-size:11px;border:1px solid var(--border);border-radius:4px;width:100%"></div>`;
+  }).join('')+'</div>':'<div class="empty-state"><i class="fas fa-users"></i><p>Tidak ada siswa</p></div>';
+}
+function changeAbsSt(nis,st){document.getElementById('ai_'+nis).className='absensi-item '+st.toLowerCase();}
+async function saveAbsensi(){
+  const tgl=document.getElementById('absenTanggal').value,eid=document.getElementById('absenEkskul').value;
+  if(!tgl||!eid) return toast('Pilih tanggal dan ekskul','error');
+  const items=document.querySelectorAll('.absensi-item');if(!items.length) return toast('Tidak ada siswa','error');
+  const records=[];items.forEach(el=>{const nis=el.id.replace('ai_','');const sel=el.querySelector('select');
+    records.push({nis,status:sel?sel.value:'Hadir',jamMulai:document.getElementById('am_'+nis)?.value||'',jamPulang:document.getElementById('ap_'+nis)?.value||'',keterangan:document.getElementById('ak_'+nis)?.value||''});});
+  const d=await api('saveAbsensi',{tanggal:tgl,ekskulId:eid,records});if(d) toast('Absensi disimpan');
 }
 
-function changeAbsenStatus(nis, status) {
-  const el = document.getElementById('ai_' + nis);
-  el.className = 'absensi-item ' + status.toLowerCase();
+// QR Scanner
+function startQR(){
+  const eid=document.getElementById('qrEkskul').value;if(!eid) return toast('Pilih ekskul','error');
+  document.getElementById('qrResult').innerHTML='';
+  if(qrScanner){try{qrScanner.clear();}catch(e){}}
+  qrScanner=new Html5Qrcode('qrReader');
+  qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:250}},async(text)=>{
+    try{await qrScanner.stop();}catch(e){}
+    document.getElementById('qrResult').innerHTML='<div class="spinner" style="margin:12px auto"></div>';
+    const d=await api('processQR',{nis:text.trim(),ekskulId:eid});
+    if(d){const ic=d.data.status==='Masuk'?'fa-sign-in-alt':'fa-sign-out-alt',cl=d.data.status==='Masuk'?'var(--success)':'var(--info)';
+      document.getElementById('qrResult').innerHTML=`<div class="qr-result"><i class="fas ${ic}" style="color:${cl}"></i><h4>${d.message}</h4><p>${d.data.nama} - ${d.data.kelas}</p><p>${d.data.jamMulai}${d.data.jamPulang?' → '+d.data.jamPulang:''}</p></div>`;
+    }else{document.getElementById('qrResult').innerHTML='<div class="qr-result"><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i><p>Gagal diproses</p></div>';}
+  },()=>{}).catch(e=>toast('Kamera gagal: '+e,'error'));
 }
-
-async function saveAbsensi() {
-  const tgl = document.getElementById('absenTanggal').value;
-  const eid = document.getElementById('absenEkskul').value;
-  if (!tgl || !eid) return toast('Pilih tanggal dan ekskul','error');
-
-  const items = document.querySelectorAll('.absensi-item');
-  if (!items.length) return toast('Tidak ada siswa untuk diabsen','error');
-
-  const records = [];
-  items.forEach(el => {
-    const nis = el.id.replace('ai_','');
-    const sel = el.querySelector('select');
-    const status = sel ? sel.value : 'Hadir';
-    const jamMulai = document.getElementById('am_'+nis)?.value || '';
-    const jamPulang = document.getElementById('ap_'+nis)?.value || '';
-    const ket = document.getElementById('ak_'+nis)?.value || '';
-    records.push({ nis, status, jamMulai, jamPulang, keterangan: ket });
-  });
-
-  const d = await api('saveAbsensi', { tanggal: tgl, ekskulId: eid, records });
-  if (d) toast('Absensi berhasil disimpan');
-}
-
-// Absensi Orang Tua
-async function loadAbsensiOT() {
-  const data = (await api('getAbsensi', { nis: currentUser.nis })) || [];
-  document.getElementById('absensiOTView').innerHTML = `
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-clipboard-check"></i> Riwayat Absensi</h3></div>
-      <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Ekskul</th><th>Status</th><th>Jam Masuk</th><th>Jam Pulang</th><th>Keterangan</th></tr></thead><tbody>
-      ${data.length ? data.map((a,i) => '<tr>'+noRow(i)+'<td>'+a.tanggal+'</td><td>'+(a.ekskulNama||'-')+'</td><td>'+statusBadge(a.status)+'</td><td>'+(a.jamMulai||'-')+'</td><td>'+(a.jamPulang||'-')+'</td><td>'+(a.keterangan||'-')+'</td></tr>').join('') : emptyRow(7)}
-      </tbody></table></div></div>
-    </div>
-  `;
-}
-
-// =============================================
-// QR SCANNER
-// =============================================
-function startQR() {
-  const eid = document.getElementById('qrEkskul').value;
-  if (!eid) return toast('Pilih ekskul terlebih dahulu','error');
-  document.getElementById('qrResult').innerHTML = '';
-  if (qrScanner) { try { qrScanner.clear(); } catch(e){} }
-
-  qrScanner = new Html5Qrcode('qrReader');
-  qrScanner.start(
-    { facingMode: 'environment' },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    async (text) => {
-      try { await qrScanner.stop(); } catch(e){}
-      document.getElementById('qrResult').innerHTML = '<div class="spinner" style="margin:12px auto"></div>';
-      const nis = text.trim();
-      const d = await api('processQR', { nis, ekskulId: eid });
-      if (d) {
-        const icon = d.data.status === 'Masuk' ? 'fa-sign-in-alt' : 'fa-sign-out-alt';
-        const color = d.data.status === 'Masuk' ? 'var(--success)' : 'var(--info)';
-        document.getElementById('qrResult').innerHTML = `<div class="qr-result"><i class="fas ${icon}" style="color:${color}"></i><h4>${d.message}</h4><p>${d.data.nama} - ${d.data.kelas}</p><p>Jam: ${d.data.jamMulai}${d.data.jamPulang?' → '+d.data.jamPulang:''}</p></div>`;
-      } else {
-        document.getElementById('qrResult').innerHTML = '<div class="qr-result"><i class="fas fa-exclamation-triangle" style="color:var(--danger)"></i><p>QR tidak dikenali atau siswa tidak terdaftar</p></div>';
-      }
-    },
-    () => {}
-  ).catch(e => {
-    toast('Gagal mengakses kamera: ' + e, 'error');
-  });
-}
-
-function stopQR() {
-  if (qrScanner) { try { qrScanner.stop().then(()=>qrScanner.clear()); } catch(e){} qrScanner = null; }
-  document.getElementById('qrResult').innerHTML = '';
-}
+function stopQR(){if(qrScanner){try{qrScanner.stop().then(()=>qrScanner.clear());}catch(e){}qrScanner=null;}document.getElementById('qrResult').innerHTML='';}
 
 // =============================================
 // KEUANGAN
 // =============================================
-async function loadKeuanganPage() {
-  if (currentUser.role === 'OrangTua') {
-    document.getElementById('keuanganAdminView').style.display = 'none';
-    document.getElementById('keuanganOTView').style.display = 'block';
-    await loadKeuanganOT();
+async function loadKeuanganPage(){
+  if(currentUser.role==='OrangTua'){
+    document.getElementById('keuanganAdminView').style.display='none';
+    document.getElementById('keuanganOTView').style.display='block';
+    const data=(await api('getKeuangan',{nis:currentUser.nis,tipe:'Pemasukan',ekskulId:currentUser.currentEkskulId}))||[];
+    const total=data.reduce((s,k)=>s+Number(k.jumlah||0),0);
+    document.getElementById('keuanganOTView').innerHTML=`<div class="stats-grid"><div class="stat-card" style="grid-column:1/-1"><div class="stat-icon green"><i class="fas fa-wallet"></i></div><div class="stat-info"><h3>${formatRp(total)}</h3><p>Pembayaran - ${currentUser.currentEkskulNama}</p></div></div></div>
+    <div class="card"><div class="card-header"><h3><i class="fas fa-receipt"></i> Riwayat</h3><div class="toolbar-btns no-print"><button class="btn btn-outline btn-sm" onclick="window.print()"><i class="fas fa-print"></i> Cetak</button></div></div><div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Jumlah</th><th>Ket</th></tr></thead><tbody>${data.map((k,i)=>'<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.keterangan||'-')+'</td></tr>').join('')+(data.length?'':emptyRow(5))}</tbody></table></div></div></div>`;
   } else {
-    document.getElementById('keuanganAdminView').style.display = 'block';
-    document.getElementById('keuanganOTView').style.display = 'none';
-    await loadKeuanganStats();
-    await loadKeuangan('Pemasukan');
+    document.getElementById('keuanganAdminView').style.display='block';
+    document.getElementById('keuanganOTView').style.display='none';
+    await loadKeuanganStats();await loadKeuangan('Pemasukan');
   }
 }
-
-async function loadKeuanganStats() {
-  const bln = new Date().getFullYear() + '-' + String(new Date().getMonth()+1).padStart(2,'0');
-  const masuk = (await api('getKeuangan', { tipe:'Pemasukan', bulan:bln })) || [];
-  const keluar = (await api('getKeuangan', { tipe:'Pengeluaran', bulan:bln })) || [];
-  const tM = masuk.reduce((s,k)=>s+Number(k.jumlah||0),0);
-  const tK = keluar.reduce((s,k)=>s+Number(k.jumlah||0),0);
-  document.getElementById('keuanganStats').innerHTML = `
-    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-arrow-down"></i></div><div class="stat-info"><h3>${formatRp(tM)}</h3><p>Pemasukan Bulan Ini</p></div></div>
-    <div class="stat-card"><div class="stat-icon red"><i class="fas fa-arrow-up"></i></div><div class="stat-info"><h3>${formatRp(tK)}</h3><p>Pengeluaran Bulan Ini</p></div></div>
-    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-balance-scale"></i></div><div class="stat-info"><h3>${formatRp(tM-tK)}</h3><p>Saldo Bulan Ini</p></div></div>
-  `;
+async function loadKeuanganStats(){
+  const bln=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+  const m=(await api('getKeuangan',{tipe:'Pemasukan',bulan:bln}))||[];
+  const k=(await api('getKeuangan',{tipe:'Pengeluaran',bulan:bln}))||[];
+  const tM=m.reduce((s,x)=>s+Number(x.jumlah||0),0),tK=k.reduce((s,x)=>s+Number(x.jumlah||0),0);
+  document.getElementById('keuanganStats').innerHTML=`<div class="stat-card"><div class="stat-icon green"><i class="fas fa-arrow-down"></i></div><div class="stat-info"><h3>${formatRp(tM)}</h3><p>Pemasukan Bulan Ini</p></div></div><div class="stat-card"><div class="stat-icon red"><i class="fas fa-arrow-up"></i></div><div class="stat-info"><h3>${formatRp(tK)}</h3><p>Pengeluaran Bulan Ini</p></div></div><div class="stat-card"><div class="stat-icon blue"><i class="fas fa-balance-scale"></i></div><div class="stat-info"><h3>${formatRp(tM-tK)}</h3><p>Saldo</p></div></div>`;
 }
-
-async function loadKeuangan(tipe) {
-  const tbId = tipe === 'Pemasukan' ? 'tbPemasukan' : 'tbPengeluaran';
-  const data = (await api('getKeuangan', { tipe })) || [];
-  const tb = document.getElementById(tbId);
-  if (tipe === 'Pemasukan') {
-    tb.innerHTML = data.length ? data.map((k,i) =>
-      '<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.ekskulNama||'-')+'</td><td>'+(k.nis||'-')+'</td><td>'+(k.keterangan||'-')+'</td><td class="action-btns">'+
-      '<button class="btn btn-danger btn-sm" onclick="delKeuangan(\''+k.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
-    ).join('') : emptyRow(8);
-  } else {
-    tb.innerHTML = data.length ? data.map((k,i) =>
-      '<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.ekskulNama||'-')+'</td><td>'+(k.keterangan||'-')+'</td><td class="action-btns">'+
-      '<button class="btn btn-danger btn-sm" onclick="delKeuangan(\''+k.id+'\')"><i class="fas fa-trash"></i></button></td></tr>'
-    ).join('') : emptyRow(7);
+async function loadKeuangan(tipe){
+  const tbId=tipe==='Pemasukan'?'tbPemasukan':'tbPengeluaran';
+  const data=(await api('getKeuangan',{tipe}))||[];
+  const tb=document.getElementById(tbId);
+  if(tipe==='Pemasukan'){
+    tb.innerHTML=data.length?data.map((k,i)=>'<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.ekskulNama||'-')+'</td><td>'+(k.nis||'-')+'</td><td>'+(k.keterangan||'-')+'</td><td class="action-btns no-print"><button class="btn btn-danger btn-sm" onclick="delKeuangan(\''+k.id+'\')"><i class="fas fa-trash"></i></button></td></tr>').join(''):emptyRow(8);
+  }else{
+    tb.innerHTML=data.length?data.map((k,i)=>'<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.ekskulNama||'-')+'</td><td>'+(k.keterangan||'-')+'</td><td class="action-btns no-print"><button class="btn btn-danger btn-sm" onclick="delKeuangan(\''+k.id+'\')"><i class="fas fa-trash"></i></button></td></tr>').join(''):emptyRow(7);
   }
 }
-
-async function loadKeuanganOT() {
-  const data = (await api('getKeuangan', { nis: currentUser.nis, tipe: 'Pemasukan' })) || [];
-  const total = data.reduce((s,k)=>s+Number(k.jumlah||0),0);
-  document.getElementById('keuanganOTView').innerHTML = `
-    <div class="stats-grid">
-      <div class="stat-card" style="grid-column:1/-1"><div class="stat-icon green"><i class="fas fa-wallet"></i></div><div class="stat-info"><h3>${formatRp(total)}</h3><p>Total Pembayaran Ekskul</p></div></div>
-    </div>
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-receipt"></i> Riwayat Pembayaran</h3></div>
-      <div class="card-body no-pad"><div class="table-wrap"><table><thead><tr><th>No</th><th>Tanggal</th><th>Kategori</th><th>Jumlah</th><th>Keterangan</th></tr></thead><tbody>
-      ${data.length ? data.map((k,i) => '<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.keterangan||'-')+'</td></tr>').join('') : emptyRow(5)}
-      </tbody></table></div></div>
-    </div>
-  `;
-}
-
-function openModalKeuangan(tipe) {
-  document.getElementById('modalKeuTitle').textContent = 'Tambah ' + tipe;
-  document.getElementById('keuId').value = '';
-  document.getElementById('keuTipe').value = tipe;
-  document.getElementById('keuTanggal').value = today();
-  document.getElementById('keuJumlah').value = '';
-  document.getElementById('keuNis').value = '';
-  document.getElementById('keuKet').value = '';
-
-  fillEkskulDropdown('keuEkskul');
-  const kat = document.getElementById('keuKategori');
-  if (tipe === 'Pemasukan') {
-    kat.innerHTML = '<option value="">-- Pilih --</option><option>Iuran Ekskul</option><option>Lainnya</option>';
-    document.getElementById('keuNisGroup').style.display = 'block';
-  } else {
-    kat.innerHTML = '<option value="">-- Pilih --</option><option>Peralatan</option><option>Perlengkapan</option><option>Transportasi</option><option>Konsumsi</option><option>Lainnya</option>';
-    document.getElementById('keuNisGroup').style.display = 'none';
-  }
+function openModalKeuangan(tipe){
+  document.getElementById('modalKeuTitle').textContent='Tambah '+tipe;
+  document.getElementById('keuId').value='';document.getElementById('keuTipe').value=tipe;
+  document.getElementById('keuTanggal').value=today();document.getElementById('keuJumlah').value='';
+  document.getElementById('keuNis').value='';document.getElementById('keuKet').value='';
+  fillEkskulDD('keuEkskul');
+  const kat=document.getElementById('keuKategori');
+  if(tipe==='Pemasukan'){kat.innerHTML='<option value="">-- Pilih --</option><option>Iuran Ekskul</option><option>Lainnya</option>';document.getElementById('keuNisGroup').style.display='block';}
+  else{kat.innerHTML='<option value="">-- Pilih --</option><option>Peralatan</option><option>Perlengkapan</option><option>Transportasi</option><option>Konsumsi</option><option>Lainnya</option>';document.getElementById('keuNisGroup').style.display='none';}
   openModal('modalKeuangan');
 }
-
-async function saveKeuangan() {
-  const tipe = document.getElementById('keuTipe').value;
-  const tanggal = document.getElementById('keuTanggal').value;
-  const kategori = document.getElementById('keuKategori').value;
-  const jumlah = document.getElementById('keuJumlah').value;
-  const ekskulId = document.getElementById('keuEkskul').value;
-  const nis = document.getElementById('keuNis').value.trim();
-  const keterangan = document.getElementById('keuKet').value.trim();
-  if (!tanggal || !kategori || !jumlah) return toast('Field wajib harus diisi','error');
-  const d = await api('saveKeuangan', { id: document.getElementById('keuId').value, tipe, tanggal, kategori, jumlah, ekskulId, nis, keterangan });
-  if (d) { toast('Keuangan disimpan'); closeModal('modalKeuangan'); loadKeuanganStats(); loadKeuangan(tipe); }
+async function saveKeuangan(){
+  const tipe=document.getElementById('keuTipe').value,tanggal=document.getElementById('keuTanggal').value;
+  const kategori=document.getElementById('keuKategori').value,jumlah=document.getElementById('keuJumlah').value;
+  if(!tanggal||!kategori||!jumlah) return toast('Field wajib harus diisi','error');
+  const d=await api('saveKeuangan',{id:document.getElementById('keuId').value,tipe,tanggal,kategori,jumlah,ekskulId:document.getElementById('keuEkskul').value,nis:document.getElementById('keuNis').value.trim(),keterangan:document.getElementById('keuKet').value.trim()});
+  if(d){toast('Disimpan');closeModal('modalKeuangan');loadKeuanganStats();loadKeuangan(tipe);}
 }
+async function delKeuangan(id){if(!confirm('Hapus?'))return;const d=await api('deleteKeuangan',{id});if(d){toast('Dihapus');loadKeuanganStats();loadKeuangan('Pemasukan');loadKeuangan('Pengeluaran');}}
 
-async function delKeuangan(id) {
-  if (!confirm('Hapus data ini?')) return;
-  const d = await api('deleteKeuangan', { id });
-  if (d) { toast('Berhasil dihapus'); loadKeuanganStats(); loadKeuangan('Pemasukan'); loadKeuangan('Pengeluaran'); }
+// =============================================
+// AUTO-GENERATE IURAN
+// =============================================
+async function previewIuran(){
+  const eid=currentUser.ekskulId||document.querySelector('#tabIuran select')?.value;
+  if(!eid){document.getElementById('iuranContent').innerHTML='<div class="card"><div class="card-body"><div class="filter-bar"><div class="form-group"><label>Ekskul</label><select id="iuranEkskul" onchange="previewIuran()"><option value="">-- Pilih --</option></select></div><div class="form-group"><label>Bulan</label><input type="month" id="iuranBulan" onchange="previewIuran()"></div></div></div></div>';fillEkskulDD('iuranEkskul');document.getElementById('iuranBulan').value=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');return;}
+  const bln=document.getElementById('iuranBulan')?.value||new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+  const d=await api('previewIuran',{ekskulId:eid,bulan:bln});
+  if(!d) return;
+  const eks=cacheEkskul.find(e=>e.id===eid);
+  document.getElementById('iuranContent').innerHTML=`
+    <div class="card"><div class="card-header"><h3><i class="fas fa-magic"></i> Generate Iuran - ${eks?eks.nama:'-'} (${bln})</h3></div><div class="card-body">
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card"><div class="stat-icon green"><i class="fas fa-money-bill"></i></div><div class="stat-info"><h3>${formatRp(d.iuranAmount)}</h3><p>Iuran/Pertemuan</p></div></div>
+        <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-file-invoice"></i></div><div class="stat-info"><h3>${formatRp(d.totalNew)}</h3><p>Total Akan Disimpan</p></div></div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-copy"></i></div><div class="stat-info"><h3>${d.totalDuplicate}</h3><p>Sudah Ada (duplikat)</p></div></div>
+      </div>
+      <div class="card-body no-pad" style="max-height:400px;overflow-y:auto"><div class="table-wrap"><table><thead><tr><th><input type="checkbox" id="iuranCheckAll" onchange="toggleAllIuran(this)"></th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Tanggal</th><th>Jumlah</th><th>Status</th></tr></thead><tbody>
+      ${d.preview.map((p,i)=>'<tr class="iuran-preview-row'+(p.alreadyExists?' dup':'')+'"><td>'+(p.alreadyExists?'':'<input type="checkbox" class="iuran-cb" data-idx="'+i+'" '+(p.checked?'checked':'')+'>')+'</td><td>'+p.nis+'</td><td>'+p.nama+'</td><td>'+p.kelas+'</td><td>'+p.tanggal+'</td><td>'+formatRp(p.jumlah)+'</td><td>'+(p.alreadyExists?'<span class="badge badge-yellow">Sudah Ada</span>':'<span class="badge badge-green">Baru</span>')+'</td></tr>').join('')}
+      </tbody></table></div></div>
+      <div style="margin-top:16px;text-align:right"><button class="btn btn-primary" onclick="saveIuranBatch(\''+eid+'\')"><i class="fas fa-save"></i> Simpan yang Dipilih</button></div>
+    </div></div>`;
+}
+function toggleAllIuran(cb){document.querySelectorAll('.iuran-cb').forEach(c=>c.checked=cb.checked);}
+async function saveIuranBatch(eid){
+  const cbs=document.querySelectorAll('.iuran-cb');const records=[];
+  const preview=window._lastIuranPreview;
+  // Re-get preview data dari tabel
+  const rows=document.querySelectorAll('.iuran-preview-row');
+  rows.forEach((row,i)=>{const cb=row.querySelector('.iuran-cb');if(cb&&cb.checked){
+    const cells=row.querySelectorAll('td');records.push({nis:cells[1].textContent.trim(),tanggal:cells[4].textContent.trim(),jumlah:cells[5].textContent.replace(/[^\d]/g,''),keterangan:'Iuran ekskul '+cells[4].textContent.trim(),checked:true,alreadyExists:false});
+  }});
+  if(!records.length) return toast('Pilih minimal 1 data','error');
+  const d=await api('saveIuranBatch',{ekskulId:eid,records});
+  if(d){toast(d.message);loadKeuanganStats();loadKeuangan('Pemasukan');}
 }
 
 // =============================================
 // LAPORAN
 // =============================================
-async function loadLaporanPage() {
-  fillEkskulDropdown('lapEkskul');
-  const now = new Date();
-  document.getElementById('lapBulan').value = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  document.getElementById('lapDari').value = '';
-  document.getElementById('lapSampai').value = '';
-  // Jika pelatih, filter otomatis
-  if (currentUser.role === 'Pelatih') {
-    document.getElementById('lapEkskul').value = currentUser.ekskulId || '';
-    document.getElementById('lapEkskul').disabled = true;
-    await loadLaporan();
-  }
-  // Jika orang tua
-  if (currentUser.role === 'OrangTua') {
-    document.getElementById('lapEkskul').value = currentUser.ekskulId || '';
-    document.getElementById('lapEkskul').disabled = true;
+async function loadLaporanPage(){
+  fillEkskulDD('lapEkskul',currentUser.ekskulId||'');
+  const now=new Date();document.getElementById('lapBulan').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  if(currentUser.role==='Pelatih'||currentUser.role==='OrangTua'){
+    document.getElementById('lapEkskul').value=currentUser.ekskulId||currentUser.currentEkskulId||'';
+    document.getElementById('lapEkskul').disabled=true;
     await loadLaporan();
   }
 }
-
-async function loadLaporan() {
-  const params = {};
-  const eid = document.getElementById('lapEkskul').value;
-  const bln = document.getElementById('lapBulan').value;
-  const dari = document.getElementById('lapDari').value;
-  const sampai = document.getElementById('lapSampai').value;
-  if (eid) params.ekskulId = eid;
-  if (currentUser.nis) params.nis = currentUser.nis;
-  if (dari && sampai) { params.tanggalAwal = dari; params.tanggalAkhir = sampai; }
-  else if (bln) params.bulan = bln;
-
-  const d = await api('getLaporan', params);
-  if (!d) return;
-
-  // Stats
-  document.getElementById('lapStats').innerHTML = `
-    <div class="stat-card"><div class="stat-icon green"><i class="fas fa-arrow-down"></i></div><div class="stat-info"><h3>${formatRp(d.totalPemasukan)}</h3><p>Total Pemasukan</p></div></div>
-    <div class="stat-card"><div class="stat-icon red"><i class="fas fa-arrow-up"></i></div><div class="stat-info"><h3>${formatRp(d.totalPengeluaran)}</h3><p>Total Pengeluaran</p></div></div>
-    <div class="stat-card"><div class="stat-icon blue"><i class="fas fa-balance-scale"></i></div><div class="stat-info"><h3>${formatRp(d.saldo)}</h3><p>Saldo</p></div></div>
-  `;
-
-  // Tabel Absensi
-  document.getElementById('tbLapAbsen').innerHTML = d.absensi.length ? d.absensi.map((a,i) =>
-    '<tr>'+noRow(i)+'<td>'+a.tanggal+'</td><td>'+(a.ekskulNama||'-')+'</td><td>'+a.nis+'</td><td>'+(a.namaSiswa||'-')+'</td><td>'+(a.kelasSiswa||'-')+'</td><td>'+statusBadge(a.status)+'</td><td>'+(a.jamMulai||'-')+'</td><td>'+(a.jamPulang||'-')+'</td><td>'+(a.keterangan||'-')+'</td></tr>'
-  ).join('') : emptyRow(10);
-
-  // Tabel Keuangan
-  document.getElementById('tbLapKeu').innerHTML = d.keuangan.length ? d.keuangan.map((k,i) =>
-    '<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+(k.tipe==='Pemasukan'?'<span class="badge badge-green">Masuk</span>':'<span class="badge badge-red">Keluar</span>')+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.ekskulNama||'-')+'</td><td>'+(k.nis||'-')+'</td><td>'+(k.keterangan||'-')+'</td></tr>'
-  ).join('') : emptyRow(8);
-
-  // Tabel Rekap
-  document.getElementById('tbLapRekap').innerHTML = d.rekapAbsensi.length ? d.rekapAbsensi.map((r,i) =>
-    '<tr>'+noRow(i)+'<td>'+r.nis+'</td><td>'+r.nama+'</td><td>'+r.kelas+'</td><td><span class="badge badge-green">'+r.hadir+'</span></td><td><span class="badge badge-yellow">'+r.sakit+'</span></td><td><span class="badge badge-blue">'+r.izin+'</span></td><td><span class="badge badge-red">'+r.alpa+'</span></td></tr>'
-  ).join('') : emptyRow(8);
+async function loadLaporan(){
+  const p={};
+  const eid=document.getElementById('lapEkskul').value,bln=document.getElementById('lapBulan').value;
+  const dari=document.getElementById('lapDari').value,sampai=document.getElementById('lapSampai').value;
+  if(eid) p.ekskulId=eid;if(currentUser.nis) p.nis=currentUser.nis;
+  if(dari&&sampai){p.tanggalAwal=dari;p.tanggalAkhir=sampai;}else if(bln) p.bulan=bln;
+  const d=await api('getLaporan',p);if(!d) return;
+  document.getElementById('lapStats').innerHTML=`<div class="stat-card"><div class="stat-icon green"><i class="fas fa-arrow-down"></i></div><div class="stat-info"><h3>${formatRp(d.totalPemasukan)}</h3><p>Pemasukan</p></div></div><div class="stat-card"><div class="stat-icon red"><i class="fas fa-arrow-up"></i></div><div class="stat-info"><h3>${formatRp(d.totalPengeluaran)}</h3><p>Pengeluaran</p></div></div><div class="stat-card"><div class="stat-icon blue"><i class="fas fa-balance-scale"></i></div><div class="stat-info"><h3>${formatRp(d.saldo)}</h3><p>Saldo</p></div></div>`;
+  document.getElementById('tbLapAbsen').innerHTML=d.absensi.length?d.absensi.map((a,i)=>'<tr>'+noRow(i)+'<td>'+a.tanggal+'</td><td>'+(a.ekskulNama||'-')+'</td><td>'+a.nis+'</td><td>'+(a.namaSiswa||'-')+'</td><td>'+(a.kelasSiswa||'-')+'</td><td>'+statusBadge(a.status)+'</td><td>'+(a.jamMulai||'-')+'</td><td>'+(a.jamPulang||'-')+'</td><td>'+(a.keterangan||'-')+'</td></tr>').join(''):emptyRow(10);
+  document.getElementById('tbLapKeu').innerHTML=d.keuangan.length?d.keuangan.map((k,i)=>'<tr>'+noRow(i)+'<td>'+k.tanggal+'</td><td>'+(k.tipe==='Pemasukan'?'<span class="badge badge-green">Masuk</span>':'<span class="badge badge-red">Keluar</span>')+'</td><td>'+k.kategori+'</td><td>'+formatRp(k.jumlah)+'</td><td>'+(k.ekskulNama||'-')+'</td><td>'+(k.nis||'-')+'</td><td>'+(k.keterangan||'-')+'</td></tr>').join(''):emptyRow(8);
+  document.getElementById('tbLapRekap').innerHTML=d.rekapAbsensi.length?d.rekapAbsensi.map((r,i)=>'<tr>'+noRow(i)+'<td>'+r.nis+'</td><td>'+r.nama+'</td><td>'+r.kelas+'</td><td><span class="badge badge-green">'+r.hadir+'</span></td><td><span class="badge badge-yellow">'+r.sakit+'</span></td><td><span class="badge badge-blue">'+r.izin+'</span></td><td><span class="badge badge-red">'+r.alpa+'</span></td></tr>').join(''):emptyRow(8);
 }
 
 // =============================================
-// KEYBOARD: ENTER UNTUK LOGIN
+// REKAP SEMESTER
 // =============================================
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    if (document.getElementById('loginPage').style.display !== 'none') {
-      if (document.getElementById('loginForm').style.display !== 'none') doLogin();
-      else doLoginOT();
-    }
+async function loadRekapSemPage(){
+  fillEkskulDD('rsEkskul',currentUser.ekskulId||currentUser.currentEkskulId||'');
+  if(currentUser.role==='Pelatih'||currentUser.role==='OrangTua'){
+    document.getElementById('rsEkskul').disabled=true;
+  }
+}
+async function loadRekapSemester(){
+  const eid=document.getElementById('rsEkskul').value;
+  const ta=document.getElementById('rsTA').value;
+  const sem=document.getElementById('rsSem').value;
+  const d=await api('getRekapSemester',{ekskulId:eid||'',tahunAjaran:ta,semester:sem,nis:currentUser.nis||''});
+  if(!d) return;
+  currentRekapData=d.rekap;
+  const semLabel=sem==='1'?'Ganjil (Jul-Des)':'Genap (Jan-Jun)';
+  document.getElementById('rsInfo').innerHTML=`<div class="stats-grid"><div class="stat-card"><div class="stat-icon green"><i class="fas fa-layer-group"></i></div><div class="stat-info"><h3>${d.ekskulNama}</h3><p>Ekskul</p></div></div><div class="stat-card"><div class="stat-icon blue"><i class="fas fa-calendar"></i></div><div class="stat-info"><h3>${ta}</h3><p>Tahun Ajaran</p></div></div><div class="stat-card"><div class="stat-icon amber"><i class="fas fa-bookmark"></i></div><div class="stat-info"><h3>Semester ${sem}</h3><p>${semLabel}</p></div></div><div class="stat-card"><div class="stat-icon teal"><i class="fas fa-users"></i></div><div class="stat-info"><h3>${d.rekap.length}</h3><p>Siswa</p></div></div></div>`;
+  document.getElementById('tbRekapSem').innerHTML=d.rekap.length?d.rekap.map((r,i)=>
+    '<tr>'+noRow(i)+'<td>'+r.nis+'</td><td>'+r.nama+'</td><td>'+r.kelas+'</td><td>'+r.hadir+'</td><td>'+r.sakit+'</td><td>'+r.izin+'</td><td>'+r.alpa+'</td><td><strong>'+r.total+'</strong></td><td><strong>'+r.persen+'%</strong></td><td><span class="badge '+(r.predikat==='A'?'badge-green':r.predikat==='B'?'badge-blue':r.predikat==='C'?'badge-yellow':'badge-red')+'">'+r.predikat+'</span></td></tr>'
+  ).join(''):emptyRow(11);
+}
+
+// Export Rekap ke Excel
+function exportRekapExcel(){
+  if(!currentRekapData.length) return toast('Tidak ada data untuk di-export','error');
+  const ta=document.getElementById('rsTA').value,sem=document.getElementById('rsSem').value;
+  const ekskul=document.getElementById('rsEkskul');
+  const ekskulNama=ekskul.options[ekskul.selectedIndex]?.text||'Semua';
+  const rows=[['REKAP KEHADIRAN EKSKUL SEMESTER'],['Ekskul: '+ekskulNama],['Tahun Ajaran: '+ta,'Semester: '+sem],[''],
+    ['No','NIS','Nama','Kelas','Hadir','Sakit','Izin','Alpa','Total','%','Predikat']
+  ];
+  currentRekapData.forEach((r,i)=>rows.push([i+1,r.nis,r.nama,r.kelas,r.hadir,r.sakit,r.izin,r.alpa,r.total,r.persen+'%',r.predikat]));
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:5},{wch:12},{wch:25},{wch:8},{wch:8},{wch:8},{wch:8},{wch:8},{wch:8},{wch:8},{wch:10}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Rekap Semester');
+  XLSX.writeFile(wb,'Rekap_Ekskul_'+ekskulNama.replace(/\s/g,'_')+'_'+ta+'_Sem'+sem+'.xlsx');
+  toast('File Excel berhasil diunduh');
+}
+
+// Export tabel generik ke Excel
+function exportTableToExcel(tableId){
+  const table=document.getElementById(tableId);if(!table) return;
+  const wb=XLSX.utils.table_to_book(table,{sheet:'Data'});
+  XLSX.writeFile(wb,'Laporan_Ekskul.xlsx');toast('File Excel diunduh');
+}
+
+// =============================================
+// KEYBOARD
+// =============================================
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&document.getElementById('loginPage').style.display!=='none'){
+    if(document.getElementById('loginForm').style.display!=='none') doLogin();else doLoginOT();
   }
 });
 </script>
